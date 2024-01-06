@@ -30,26 +30,26 @@ const authController ={
             const { email, password, name, surname, phone, dogum, rol, city, district } = req.body;
     
             // il_adı'nın karşılık gelen il_id'sini bul
-            const [cityRows, cityFields] = await pool.query("SELECT il_id FROM anketyonetimsistemi.iller WHERE il_adi = ?", [city]);
+            const [cityRows, cityFields] = await pool.query("SELECT il_id FROM iller WHERE il_adi = ?", [city]);
             if (cityRows.length === 0) {
                 return res.json({ error: "City does not exist!" });
             }
             const il_id = cityRows[0].il_id;
     
             // il ve ilçe'nin daha önce girilip girilmediğini kontrol et
-            const [locationRows, locationFields] = await pool.query("SELECT konum_id FROM anketyonetimsistemi.konum WHERE il_id = ? AND ilçe = ?", [il_id, district]);
+            const [locationRows, locationFields] = await pool.query("SELECT konum_id FROM konum WHERE il_id = ? AND ilçe = ?", [il_id, district]);
             let konum_id;
             if (locationRows.length > 0) {
                 konum_id = locationRows[0].konum_id;
             } else {
                 // Yeni konum_id oluştur ve konum tablosuna ekle
-                const locationSql = "INSERT INTO anketyonetimsistemi.konum (il_id, ilçe) VALUES (?, ?)";
+                const locationSql = "INSERT INTO konum (il_id, ilçe) VALUES (?, ?)";
                 const [locationInsertRows, locationInsertFields] = await pool.query(locationSql, [il_id, district]);
                 konum_id = locationInsertRows.insertId;
             }
     
             // Email kontrolü
-            const [user,] = await pool.query("SELECT * FROM anketyonetimsistemi.kullanicilar WHERE email = ?", [email]);
+            const [user,] = await pool.query("SELECT * FROM kullanicilar WHERE email = ?", [email]);
             if (user[0]) {
                 return res.json({ error: "Email already exists!" });
             }
@@ -58,7 +58,7 @@ const authController ={
             const hashedPassword = await bcrypt.hash(password, saltRounds);
     
             // Kullanıcıyı veritabanına ekle
-            const userSql = "INSERT INTO anketyonetimsistemi.kullanicilar ( email, sifre, Isim, Soyisim, telefon, dogumtarihi, rol, konum_id) VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
+            const userSql = "INSERT INTO kullanicilar ( email, sifre, Isim, Soyisim, telefon, dogumtarihi, rol, konum_id) VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
             const [userRows, userFields] = await pool.query(userSql, [email, hashedPassword, name, surname, phone, dogum, rol, konum_id]);
     
             if (userRows.affectedRows) {
@@ -78,7 +78,7 @@ const authController ={
             const { email, password } = req.body;
     
             // Kullanıcının e-postasını kontrol et
-            const [user,] = await pool.query("SELECT * FROM anketyonetimsistemi.kullanicilar WHERE email = ?", [email]);
+            const [user,] = await pool.query("SELECT * FROM kullanicilar WHERE email = ?", [email]);
             if (!user[0]) return res.json({ error: "Invalid email!" });
         
 
