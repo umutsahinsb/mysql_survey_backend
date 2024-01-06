@@ -7,7 +7,7 @@ const postsController = {
     getAll: async (req,res) => {
         try{
             const [rows, fields] = await pool.query(
-                "SELECT * FROM `hane_veri_seti`")
+                "SELECT * FROM `kullanicilar`")
             res.json({
                 data: rows
             })
