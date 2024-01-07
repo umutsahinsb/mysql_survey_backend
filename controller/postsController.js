@@ -23,7 +23,7 @@ const postsController = {
         try{
             const{sira} = req.params
             const [rows, fields] = await pool.query(
-                "SELECT * FROM `hane_veri_seti` where Sıra=?", [sira])
+                "SELECT * FROM `kullanicilar` where kullanici_id=?", [kullanici_id])
                 if(rows.length === 0){
                     res.status(404).json({
                         status: "error",
@@ -48,7 +48,7 @@ const postsController = {
     create: async(req, res) =>{
         try{
             const{sira,mahalle,sokak} = req.body
-            const checkSql = "SELECT * FROM `hane_veri_seti` where Sıra=?"
+            const checkSql = "SELECT * FROM `kullanicilar` where Sıra=?"
             const [checkRows, checkFields] = await pool.query(checkSql, [sira])
             if(checkRows.length > 0){
                 res.status(400).json({
@@ -56,7 +56,7 @@ const postsController = {
                     message: "The provided ID already exists"
                 })
             } else {
-                const sql = "insert into hane_veri_seti (Sıra, Mahalle, Sokak) values (?,?,?)"
+                const sql = "insert into kullanicilar (Sıra, Mahalle, Sokak) values (?,?,?)"
                 const [rows, fields] = await pool.query(sql, [sira, mahalle,sokak])
                 res.json({
                     data: rows
@@ -75,7 +75,7 @@ const postsController = {
         try{
             const{sira} = req.params
             const [rows, fields] = await pool.query(
-                "SELECT * FROM `hane_veri_seti`")
+                "SELECT * FROM `kullanicilar`")
             
             let workbook = new ExcelJS.Workbook();
             let worksheet = workbook.addWorksheet("Veriler");

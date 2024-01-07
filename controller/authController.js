@@ -79,7 +79,7 @@ const authController ={
     
             // Kullanıcının e-postasını kontrol et
             const [user,] = await pool.query("SELECT * FROM kullanicilar WHERE email = ?", [email]);
-            if (!user[0]) return res.json({ error: "Invalid email!" });
+            if (!user[0]) return res.json({ error: "Invalid email or password!" });
         
 
             const { sifre: hash, kullanici_id, Isim, Soyisim, telefon, rol, dogumtarihi, cinsiyet, address} = user[0];
@@ -88,7 +88,8 @@ const authController ={
             const check = await bcrypt.compare(password, hash);
     
             if (check) {
-                let userData = getUserData(kullanici_id, rol, Isim, Soyisim, telefon, dogumtarihi, cinsiyet, address);
+                let userData = {"userData":getUserData(kullanici_id, rol, Isim, Soyisim, telefon, dogumtarihi, cinsiyet, address)};
+                
                 return res.json(userData);
             }
     
