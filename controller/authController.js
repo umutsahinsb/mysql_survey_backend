@@ -156,7 +156,7 @@ const authController ={
             const [rows, fields] = await pool.query(
                 "SELECT * FROM `kullanicilar` WHERE durum = 0")
             res.json({
-                data: rows
+                registeredUsers: rows
             })
         }
         catch (error){
