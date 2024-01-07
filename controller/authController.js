@@ -144,7 +144,12 @@ const authController ={
 
                 let userData = {"userData":getUserData(kullanici_id, rol, isim, soyisim, telefon, dogumtarihi, cinsiyet, city, email)};
                 const notifData = await getNotifs();
-                userData = {...userData, "notifData": notifData, ...pollsterData};
+                userData = {...userData, "notifData": notifData};
+
+                if(rol === "Anketör"){
+                    console.log("pollsterData:", pollsterData);
+                    userData = {...notifData, ...pollsterData};
+                }
                 return res.json(userData);
             }
         }
