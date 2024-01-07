@@ -278,7 +278,7 @@ const authController ={
     
             // Insert the new task into the database
             const insertQuery = `
-            INSERT INTO iş (anket_sayisi, baslangic_tarihi, bitis_tarihi, belirlenen_sablon, is_basligi, kadin_orani, konum_id, anketor_id)
+            INSERT INTO iş (anket_sayisi, baslangic_tarihi, bitis_tarihi, belirlenen_sablon, is_basligi, kadin_orani, konum_id, kullanici_id)
             VALUES (?, ?, ?, ?, ?, ?, (SELECT konum_id FROM konum INNER JOIN iller ON konum.il_id = iller.il_id 
             WHERE iller.il_adi = ? AND konum.ilce = ?), ?)`;
     
