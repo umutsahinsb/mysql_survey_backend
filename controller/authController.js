@@ -33,9 +33,7 @@ const authController ={
     
             // il_adı'nın karşılık gelen il_id'sini bul
             const [cityRows, cityFields] = await pool.query("SELECT il_id FROM iller WHERE il_adi = ?", [city]);
-            if (cityRows.length === 0) {
-                return res.json({ error: "Girilen şehir bulunamadı!" });
-            }
+        
             const il_id = cityRows[0].il_id;
     
             // il ve ilçe'nin daha önce girilip girilmediğini kontrol et
