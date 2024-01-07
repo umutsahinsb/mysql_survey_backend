@@ -115,13 +115,7 @@ const authController ={
             const check = await bcrypt.compare(password, hash);
     
             if (check) {
-                const cityQuery = "SELECT iller.il_adi FROM iller JOIN konum ON iller.il_id = konum.il_id WHERE konum.konum_id = ?";
-                const [cityResult,] = await pool.query(cityQuery, [konum_id]);
-                const city = cityResult[0].city;
-
-                const districtQuery = "SELECT konum.ilçe FROM konum WHERE konum.konum_id = ?";
-                const [districtResult,] = await pool.query(districtQuery, [konum_id]);
-                const district = districtResult[0].district;
+                
 
                 // Anketör ve İş bilgilerini birleştir
                 const query = `
@@ -130,6 +124,13 @@ const authController ={
                 const [result,] = await pool.query(query, [kullanici_id]);
 
             if (result.length > 0) {
+                const cityQuery = "SELECT iller.il_adi FROM iller JOIN konum ON iller.il_id = konum.il_id WHERE konum.konum_id = ?";
+                const [cityResult,] = await pool.query(cityQuery, [konum_id]);
+                const city = cityResult[0].city;
+
+                const districtQuery = "SELECT konum.ilçe FROM konum WHERE konum.konum_id = ?";
+                const [districtResult,] = await pool.query(districtQuery, [konum_id]);
+                const district = districtResult[0].district;
                 const {
                     title,
                     startDate,
