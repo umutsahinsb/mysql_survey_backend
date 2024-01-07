@@ -3,13 +3,13 @@ const bcrypt = require('bcrypt');
 
 const saltRounds = 10;
 
-function getUserData(kullanici_id, roles, Isim, Soyisim, telefon, dogumtarihi, cinsiyet, address, email) {
+function getUserData(kullanici_id, roles, isim, soyisim, telefon, dogumtarihi, cinsiyet, address, email) {
     
     return {
         userId: kullanici_id,
         role: roles,
-        name: Isim,
-        surname: Soyisim,
+        name: isimsim,
+        surname: soyisim,
         phone: telefon,
         birth_date: dogumtarihi,
         gender: cinsiyet,
@@ -18,10 +18,6 @@ function getUserData(kullanici_id, roles, Isim, Soyisim, telefon, dogumtarihi, c
     };
 }
 
-async function getUserName(kullanici_id) {
-    const [user,] = await pool.query("SELECT isim FROM kullanicilar WHERE kullanici_id = ?", [kullanici_id]);
-    return user[0].isim;
-}
 async function getNotifs() {
     const [bildirimler,] = await pool.query("SELECT * FROM bildirim");
     return bildirimler.map(bildirim => ({
@@ -100,7 +96,8 @@ const authController ={
     
             if (check) {
                 let userData = {"userData":getUserData(kullanici_id, rol, isim, soyisim, telefon, dogumtarihi, cinsiyet, address, email)};
-                userData = {...userData,"notifData":getNotifs()} 
+                const notifData = await getNotifs();
+                userData = {...userData, "notifData": notifData};
                 return res.json(userData);
             }
     
