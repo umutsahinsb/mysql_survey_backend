@@ -193,11 +193,11 @@ const authController ={
                     if (userRows.affectedRows) {
                         const { rol } = check[0];
                         let roleSql;
-                        if (rol === 'anketör') {
+                        if (rol === 'Anketör') {
                             roleSql = "INSERT INTO anketör (kullanici_id) VALUES (?)";
-                        } else if (rol === 'planlamacı') {
+                        } else if (rol === 'Planlamacı') {
                             roleSql = "INSERT INTO planlamaci (kullanici_id) VALUES (?)";
-                        } else if (rol === 'admin') {
+                        } else if (rol === 'Yönetici') {
                             roleSql = "INSERT INTO yönetici (kullanici_id) VALUES (?)";
                         }
                         await pool.query(roleSql, [id]);
@@ -224,6 +224,14 @@ const authController ={
             res.json({
                 error: error.message
             });
+        }
+    },
+    getTaskCreate: async (req, res) => {
+        try {
+            
+        }
+        catch{
+
         }
     }
 };

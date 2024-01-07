@@ -10,4 +10,6 @@ router.post("/poll", authController.template)
 router.get("/register", authController.getRegister)
 router.get("/approve", authController.unregisteredUsers)
 router.post("/approve", authController.registeringUsers)
+router.get("/getTaskCreate",authController.getTaskCreate)
+router.post("/create-task",authController.taskCreate)
 module.exports = router
