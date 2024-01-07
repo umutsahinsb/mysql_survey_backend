@@ -83,14 +83,14 @@ const authController ={
     },
     login: async (req, res) => {
         try {
-            const { email, password } = req.body;
+            const { email:_email , password } = req.body;
     
             // Kullanıcının e-postasını kontrol et
-            const [user,] = await pool.query("SELECT * FROM kullanicilar WHERE email = ?", [email]);
+            const [user,] = await pool.query("SELECT * FROM kullanicilar WHERE email = ?", [_email]);
             if (!user[0]) return res.json({ error: "Invalid email or password!" });
         
 
-            const { sifre: hash, kullanici_id, isim, soyisim, telefon, rol, dogumtarihi, cinsiyet, address, durum} = user[0];
+            const { sifre: hash, kullanici_id, isim, soyisim, telefon, rol, dogumtarihi, cinsiyet, address, durum, email} = user[0];
     
             if (durum === 0) return res.json({ error: "Henüz kullanıcı kaydınız onaylanmadı!" });
 
