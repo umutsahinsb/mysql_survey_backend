@@ -3,7 +3,7 @@ const bcrypt = require('bcrypt');
 
 const saltRounds = 10;
 
-function getUserData(kullanici_id, roles, Isim, Soyisim, telefon, dogumtarihi, cinsiyet, address) {
+function getUserData(kullanici_id, roles, Isim, Soyisim, telefon, dogumtarihi, cinsiyet, address, email) {
     
     return {
         userId: kullanici_id,
@@ -13,7 +13,8 @@ function getUserData(kullanici_id, roles, Isim, Soyisim, telefon, dogumtarihi, c
         phone: telefon,
         birth_date: dogumtarihi,
         gender: cinsiyet,
-        city: address
+        city: address,
+        email: email
     };
 }
 
