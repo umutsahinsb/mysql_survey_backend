@@ -115,6 +115,7 @@ const authController ={
             const check = await bcrypt.compare(password, hash);
     
             if (check) {
+                // Anketör için ana ekran
                 if (rol === "Anketör") {
                     const cityQuery = "SELECT iller.il_adi FROM iller JOIN konum ON iller.il_id = konum.il_id WHERE konum.konum_id = ?";
                     const [cityResult,] = await pool.query(cityQuery, [konum_id]);
