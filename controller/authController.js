@@ -134,8 +134,6 @@ const authController ={
                     title,
                     startDate,
                     endDate,
-                    city,
-                    district,
                     template,
                     percentageOfWomen
                 } = result[0];
