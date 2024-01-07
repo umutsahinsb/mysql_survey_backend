@@ -229,7 +229,7 @@ const authController ={
     getTaskCreate: async (req, res) => {
         try {
             // Anketörlerin isimlerini çek
-            const [anketorler,] = await pool.query("SELECT a.kullanici_id, k.isim FROM anketör a INNER JOIN kullanicilar k ON a.kullanici_id = k.kullanici_id WHERE ");
+            const [anketorler,] = await pool.query("SELECT a.kullanici_id, k.isim FROM anketör a INNER JOIN kullanicilar k ON a.kullanici_id = k.kullanici_id");
             const pollsters = anketorler.map(anketor => `Id:${anketor.kullanici_id}, ismi: ${anketor.isim}`);
     
             // Şablonların isimlerini çek
