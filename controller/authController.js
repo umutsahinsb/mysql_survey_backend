@@ -254,7 +254,8 @@ const authController ={
         
             // Parse the pollster id from the pollster string
             const pollsterId = pollster.split(':')[1];
-            console.log(pollsterId);
+            const pollsterIdFixed = pollsterId.split(',')[0];
+            console.log(pollsterIdFixed);
             // Get the pollster's name
             const [pollsterInfo,] = await pool.query("SELECT k.isim FROM kullanicilar k WHERE k.kullanici_id = ?", [pollsterId]);
             const pollsterName = pollsterInfo[0].isim;
@@ -274,7 +275,8 @@ const authController ={
             // Update the pollster's yapilacak_is field
             const updatePollsterQuery = "UPDATE anketör SET yapilacak_is = ? WHERE kullanici_id = ?";
             const updatePollsterValues = [taskId, pollsterId];
-            console.log(taskId,pollsterId);
+
+            console.log(taskId, pollsterIdFixed);
             await pool.query(updatePollsterQuery, updatePollsterValues);
         
             // Return success response
