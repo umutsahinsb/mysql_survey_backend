@@ -150,7 +150,6 @@ const authController ={
                 userData = {...userData, "notifData": notifData};
 
                 if (rol === "Anketör") {
-                    const pollsterData = getPollsterData(title, startDate, endDate, city, district, template, percentageOfWomen);
                     userData = {...userData, "pollsterData": pollsterData};
                 }
 
