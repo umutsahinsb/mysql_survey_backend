@@ -94,7 +94,7 @@ const authController ={
             if (!user[0]) return res.json({ error: "Invalid email or password!" });
         
 
-            const { sifre: hash, kullanici_id, isim, soyisim, telefon, rol, dogumtarihi, cinsiyet, konum_id, durum, email} = user[0];
+            const { sifre: hash, kullanici_id, isim, soyisim, telefon, rol, dogumtarihi, cinsiyet, durum, email} = user[0];
     
             if (durum === 0) return res.json({ error: "Henüz kullanıcı kaydınız onaylanmadı!" });
 
@@ -102,7 +102,7 @@ const authController ={
             const check = await bcrypt.compare(password, hash);
     
             if (check) {
-                let userData = {"userData":getUserData(kullanici_id, rol, isim, soyisim, telefon, dogumtarihi, cinsiyet, address, email)};
+                let userData = {"userData":getUserData(kullanici_id, rol, isim, soyisim, telefon, dogumtarihi, cinsiyet, email)};
                 const notifData = await getNotifs();
                 userData = {...userData, "notifData": notifData};
                 return res.json(userData);
@@ -278,7 +278,7 @@ const authController ={
             // Update the pollster's yapilacak_is field
             const updatePollsterQuery = "UPDATE anketör SET yapilacak_is = ? WHERE kullanici_id = ?";
             const updatePollsterValues = [taskId, pollsterIdFixed];
-            console.log(taskId);
+
             await pool.query(updatePollsterQuery, updatePollsterValues);
         
             // Return success response
