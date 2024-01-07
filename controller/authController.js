@@ -115,7 +115,7 @@ const authController ={
             const check = await bcrypt.compare(password, hash);
     
             if (check) {
-                const cityQuery = "SELECT iller.il_adi FROM iller JOIN konum ON iller.konum_id = konum.konum_id WHERE konum.konum_id = ?";
+                const cityQuery = "SELECT iller.il_adi FROM iller JOIN konum ON iller.il_id = konum.ii_id WHERE konum.konum_id = ?";
                 const [cityResult,] = await pool.query(cityQuery, [konum_id]);
                 const city = cityResult[0].city;
 
