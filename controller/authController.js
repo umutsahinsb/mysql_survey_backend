@@ -142,29 +142,31 @@ const authController ={
                 console.log(result[0]);
 
                 // Anketör verilerini getPollsterData fonksiyonuyla birleştir
-                const pollsterData = getPollsterData(result[0].is_basligi, result[0].baslangic_tarihi, result[0].bitis_tarihi, city, district, result[0].kullanilan_sablon, result[0].kadin_orani);
+                const pollsterData = getPollsterData(result[0].is_basligi, result[0].baslangic_tarihi, result[0].bitis_tarihi, city, district, result[0].belirlenen_sablon, result[0].kadin_orani);
                 console.log("Pollster Data:", pollsterData);
 
-                let userData = {"userData":getUserData(kullanici_id, rol, isim, soyisim, telefon, dogumtarihi, cinsiyet, city, email)};
+                let userData = {"userData": getUserData(kullanici_id, rol, isim, soyisim, telefon, dogumtarihi, cinsiyet, city, email)};
                 const notifData = await getNotifs();
                 userData = {...userData, "notifData": notifData};
 
-                if(rol === "Anketör"){
-                    userData = {...userData, ...notifData, "pollsterData": pollsterData};
+                if (rol === "Anketör") {
+                    const pollsterData = getPollsterData(title, startDate, endDate, city, district, template, percentageOfWomen);
+                    userData = {...userData, "pollsterData": pollsterData};
                 }
+
                 return res.json(userData);
             }
         }
             
-        return res.json({ error: "Wrong password!" });
-        }
-         catch (error) {
-            console.log(error);
-            res.json({
-                error: error.message
-            });
-        }
-    },
+            return res.json({ error: "Wrong password!" });
+            }
+                catch (error) {
+                    console.log(error);
+                    res.json({
+                        error: error.message
+                    });
+                }
+        },
     template: async(req,res) =>{
         
         try{
