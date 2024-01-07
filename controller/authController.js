@@ -251,34 +251,32 @@ const authController ={
     taskCreate: async (req, res) => {
         try {
             const { city, district, endDate, numberOfSurveys, percentageOfWomen, pollster, startDate, template, title } = req.body;
-    
+        
             // Parse the pollster id from the pollster string
-            const pollsterId = pollster.slice(3,4)
-    
+            const pollsterId = pollster.split(':')[1].split(',')[0];
+        
             // Get the pollster's name
             const [pollsterInfo,] = await pool.query("SELECT k.isim FROM kullanicilar k WHERE k.kullanici_id = ?", [pollsterId]);
             const pollsterName = pollsterInfo[0].isim;
-
-           
+    
             // Insert the new task into the database
             const insertQuery = `
             INSERT INTO iş (anket_sayisi, baslangic_tarihi, bitis_tarihi, belirlenen_sablon, is_basligi, kadin_orani, konum_id)
             VALUES (?, ?, ?, ?, ?, ?, 6)`;
+        
+            const insertValues = [numberOfSurveys, startDate, endDate, template, title, percentageOfWomen, city];
     
-            const insertValues = [numberOfSurveys, startDate, endDate, template, title, percentageOfWomen];
-
-            await pool.query(insertQuery, insertValues);
-
-              // Get the newly inserted task's ID
+            const insertRows = await pool.query(insertQuery, insertValues);
+    
+            // Get the newly inserted task's ID
             const taskId = insertRows.insertId;
-
-             // Update the pollster's yapilacak_is field
+    
+            // Update the pollster's yapilacak_is field
             const updatePollsterQuery = "UPDATE anketör SET yapilacak_is = ? WHERE kullanici_id = ?";
             await pool.query(updatePollsterQuery, [taskId, pollsterId]);
-    
+        
             // Return success response
             return res.json({
-                success: true,
                 message: "Task created successfully"
             });
         } catch (error) {
@@ -289,7 +287,6 @@ const authController ={
         }
     }
     
-        
 };
 
 module.exports = authController;
