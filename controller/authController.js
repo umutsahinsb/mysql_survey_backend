@@ -154,7 +154,7 @@ const authController ={
     unregisteredUsers:async(req,res) =>{
         try{
             const [rows, fields] = await pool.query(
-                "SELECT k.kullanici_id, k.isim, k.soyisim, i.il_adi, ko.ilçe FROM kullanicilar AS k JOIN konum AS ko ON k.konum_id = ko.konum_id JOIN iller AS i ON ko.il_id = i.il_id WHERE k.durum = 0")
+                "SELECT k.kullanici_id, k.email, k.isim, k.soyisim, i.il_adi, ko.ilçe FROM kullanicilar AS k JOIN konum AS ko ON k.konum_id = ko.konum_id JOIN iller AS i ON ko.il_id = i.il_id WHERE k.durum = 0")
             res.json({
                 registeredUsers: rows
             })
