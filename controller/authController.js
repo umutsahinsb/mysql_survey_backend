@@ -261,6 +261,9 @@ const authController ={
 
             // il_adı'nın karşılık gelen il_id'sini bul
             const [cityRows, cityFields] = await pool.query("SELECT il_id FROM iller WHERE il_adi = ?", [city]);
+
+            let il_id;
+            
             if (cityRows && cityRows.length > 0) {
             const il_id = cityRows[0].il_id;
             }
