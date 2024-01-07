@@ -21,8 +21,8 @@ function getUserData(kullanici_id, roles, isim, soyisim, telefon, dogumtarihi, c
 function getPollsterData(title, startDate, endDate, city, district, template, percentageOfWomen){
     return{
         title: title,
-        startDate: result[0].baslangic_tarihi,
-        endDate: result[0].bitis_tarihi,
+        startDate: startDate,
+        endDate: endDate,
         city: city,
         district: district,
         template: template,
