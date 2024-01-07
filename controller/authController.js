@@ -253,7 +253,7 @@ const authController ={
             const { city, district, endDate, numberOfSurveys, percentageOfWomen, pollster, startDate, template, title } = req.body;
         
             // Parse the pollster id from the pollster string
-            const pollsterId = pollster.split(':')[1].split(',')[0];
+            const pollsterId = pollster.split(':')[1];
         
             // Get the pollster's name
             const [pollsterInfo,] = await pool.query("SELECT k.isim FROM kullanicilar k WHERE k.kullanici_id = ?", [pollsterId]);
