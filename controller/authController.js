@@ -226,6 +226,28 @@ const authController ={
             });
         }
     },
+    getTaskCreate: async (req, res) => {
+        try {
+            // Anketörlerin isimlerini çek
+            const [anketorler,] = await pool.query("SELECT kullanici_id, isim FROM anketor WHERE durum = 1");
+            const polsters = anketorler.map(anketor => `Id:${anketor.kullanici_id}, ismi: ${anketor.isim}`);
+    
+            // Şablonların isimlerini çek
+            const [sablonlar,] = await pool.query("SELECT baslik FROM sablon");
+            const templates = sablonlar.map(sablon => sablon.baslik);
+    
+            // Sonuçları döndür
+            return res.json({
+                sablonlar: templates,
+                polsters: polsters
+            });
+        } catch (error) {
+            console.log(error);
+            res.json({
+                error: error.message
+            });
+        }
+    }
 };
 
 module.exports = authController;
