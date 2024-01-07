@@ -280,7 +280,7 @@ const authController ={
             const insertQuery = `
             INSERT INTO iş (anket_sayisi, baslangic_tarihi, bitis_tarihi, belirlenen_sablon, is_basligi, kadin_orani, konum_id)
             VALUES (?, ?, ?, ?, ?, ?, (SELECT konum_id FROM konum INNER JOIN iller ON konum.il_id = iller.il_id 
-            WHERE iller.il_adi = ? AND konum.ilce = ?))`;
+            WHERE iller.il_adi = ? AND konum.ilçe = ?))`;
     
             const insertValues = [numberOfSurveys, startDate, endDate, template, title, percentageOfWomen, city, district];
 
