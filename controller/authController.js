@@ -33,7 +33,7 @@ const authController ={
             // il_adı'nın karşılık gelen il_id'sini bul
             const [cityRows, cityFields] = await pool.query("SELECT il_id FROM iller WHERE il_adi = ?", [city]);
             if (cityRows.length === 0) {
-                return res.json({ error: "City does not exist!" });
+                return res.json({ error: "Girilen şehir bulunamadı!" });
             }
             const il_id = cityRows[0].il_id;
     
@@ -52,7 +52,7 @@ const authController ={
             // Email kontrolü
             const [user,] = await pool.query("SELECT * FROM kullanicilar WHERE email = ?", [email]);
             if (user[0]) {
-                return res.json({ error: "Email already exists!" });
+                return res.json({ error: "Bu maile kayıtlı bir kullanıcı zaten var!" });
             }
     
             // Şifreyi hashle
@@ -63,9 +63,9 @@ const authController ={
             const [userRows, userFields] = await pool.query(userSql, [email, hashedPassword, name, surname, phone, birthDate, role, konum_id, gender]);
     
             if (userRows.affectedRows) {
-                return res.json({ message: "Registration successful" });
+                return res.json({ message: "Kayıt başarılı. Yönetici onayını bekleyiniz." });
             } else {
-                return res.json({ error: "Registration failed" });
+                return res.json({ error: "Kayıt işlemi başarısız oldu!" });
             }
         } catch (error) {
             console.log(error);
