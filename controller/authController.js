@@ -263,11 +263,12 @@ const authController ={
             const [cityRows, cityFields] = await pool.query("SELECT il_id FROM iller WHERE il_adi = ?", [city]);
 
             let il_id;
-            
+
             if (cityRows && cityRows.length > 0) {
             const il_id = cityRows[0].il_id;
             }
             // il ve ilçe'nin daha önce girilip girilmediğini kontrol et
+            console.log("Obtained il_id:", il_id);
             const [locationRows, locationFields] = await pool.query("SELECT konum_id FROM konum WHERE il_id = ? AND ilçe = ?", [il_id, district]);
             let konum_id;
             if (locationRows.length > 0) {
