@@ -271,7 +271,7 @@ const authController ={
             const insertRows = await pool.query(insertQuery, insertValues);
     
             // Get the newly inserted task's ID
-            const taskIdQuery = "SELECT LAST_INSERT_ID() as task_id";
+            const taskIdQuery = "SELECT * FROM iş ORDER BY is_id DESC LIMIT 1";
             const [taskIdResult,] = await pool.query(taskIdQuery);
             const taskId = taskIdResult[0].task_id;
 
