@@ -118,10 +118,12 @@ const authController ={
                 const cityQuery = "SELECT iller.il_adi FROM iller JOIN konum ON iller.il_id = konum.il_id WHERE konum.konum_id = ?";
                 const [cityResult,] = await pool.query(cityQuery, [konum_id]);
                 const city = cityResult[0].city;
+                console.log(city);
 
                 const districtQuery = "SELECT konum.ilçe FROM konum WHERE konum.konum_id = ?";
                 const [districtResult,] = await pool.query(districtQuery, [konum_id]);
                 const district = districtResult[0].district;
+                console.log(district);
 
                 // Anketör ve İş bilgilerini birleştir
                 const query = `
