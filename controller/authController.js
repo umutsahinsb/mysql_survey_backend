@@ -259,32 +259,13 @@ const authController ={
             const [pollsterInfo,] = await pool.query("SELECT k.isim FROM kullanicilar k WHERE k.kullanici_id = ?", [pollsterId]);
             const pollsterName = pollsterInfo[0].isim;
 
-           // il_adı'nın karşılık gelen il_id'sini bul
-            const [cityRows, cityFields] = await pool.query("SELECT il_id FROM iller WHERE il_adi = ?", [city]);
-        
-            const il_id = cityRows[0].il_id;
-    
-            // il ve ilçe'nin daha önce girilip girilmediğini kontrol et
-            const [locationRows, locationFields] = await pool.query("SELECT konum_id FROM konum WHERE il_id = ? AND ilçe = ?", [il_id, district]);
-            let konum_id;
-            if (locationRows.length > 0) {
-                konum_id = locationRows[0].konum_id;
-            } else {
-                // Yeni konum_id oluştur ve konum tablosuna ekle
-                const locationSql = "INSERT INTO konum (il_id, ilçe) VALUES (?, ?)";
-                const [locationInsertRows, locationInsertFields] = await pool.query(locationSql, [il_id, district]);
-                konum_id = locationInsertRows.insertId;
-            }
-            
-    
-            
+           
             // Insert the new task into the database
             const insertQuery = `
             INSERT INTO iş (anket_sayisi, baslangic_tarihi, bitis_tarihi, belirlenen_sablon, is_basligi, kadin_orani, konum_id)
-            VALUES (?, ?, ?, ?, ?, ?, (SELECT konum_id FROM konum INNER JOIN iller ON konum.il_id = iller.il_id 
-            WHERE iller.il_adi = ? AND konum.ilçe = ?))`;
+            VALUES (?, ?, ?, ?, ?, ?, 6)`;
     
-            const insertValues = [numberOfSurveys, startDate, endDate, template, title, percentageOfWomen, city, district];
+            const insertValues = [numberOfSurveys, startDate, endDate, template, title, percentageOfWomen];
 
             await pool.query(insertQuery, insertValues);
 
