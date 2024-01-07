@@ -137,6 +137,7 @@ const authController ={
                     template,
                     percentageOfWomen
                 } = result[0];
+                console.log(result[0]);
 
                 // Anketör verilerini getPollsterData fonksiyonuyla birleştir
                 const pollsterData = getPollsterData(title, startDate, endDate, city, district, template, percentageOfWomen);
