@@ -9,6 +9,7 @@ const sehir ={
     1: "Ankara"
 };    
 
+
 function getUserData(kullanici_id, roles, Isim, Soyisim, telefon, dogumtarihi, cinsiyet, address) {
     
     return {
@@ -126,6 +127,32 @@ const authController ={
             res.json({
                 error: error.message
             });
+        }
+    },
+    getRegister:async(req,res) =>{
+       try{
+        
+        // İllerin listesini al
+        const [iller,] = await pool.query("SELECT * FROM iller");
+        let cities = iller.map(il => il.il_adi).join(', ');
+
+        // İlçelerin listesini al
+        let district = [];
+        for (let il of iller) {
+            const [ilceler,] = await pool.query("SELECT ilce FROM konum WHERE il_id = ?", [il.il_id]);
+            district.push({[il.il_adi]: ilceler.map(ilce => ilce.ilce)});
+        }
+
+        res.json({
+            cities: cities,
+            district: district
+        })
+    }
+        catch (error){
+            console.log(error.message +"Error occured");
+            res.json({
+                status: "error"
+            })
         }
     }
 };
