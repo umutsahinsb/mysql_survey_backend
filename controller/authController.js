@@ -17,15 +17,22 @@ function getUserData(kullanici_id, roles, isim, soyisim, telefon, dogumtarihi, c
         email: email
     };
 }
+async function getUserName(kullanici_id) {
+    const [user,] = await pool.query("SELECT isim FROM kullanicilar WHERE kullanici_id = ?", [kullanici_id]);
+    return user[0].isim;
+}
 
 async function getNotifs() {
     const [bildirimler,] = await pool.query("SELECT * FROM bildirim");
-    return bildirimler.map(bildirim => ({
-        id: bildirim.bildirim_id,
-        title: bildirim.baslik,
-        status: bildirim.durum,
-        person: bildirim.isim,
-        date: bildirim.date
+    return Promise.all(bildirimler.map(async bildirim => {
+        const isim = await getUserName(bildirim.kullanici_id);
+        return {
+            id: bildirim.bildirim_id,
+            title: bildirim.baslik,
+            status: bildirim.durum,
+            person: isim,
+            date: bildirim.created_date
+        };
     }));
 }
 
