@@ -270,7 +270,7 @@ const authController ={
     
             // Get the newly inserted task's ID
             const taskId = insertRows.insertId;
-    
+
             // Update the pollster's yapilacak_is field
             const updatePollsterQuery = "UPDATE anketör SET yapilacak_is = ? WHERE kullanici_id = ?";
             await pool.query(updatePollsterQuery, [taskId, pollsterId]);
