@@ -150,7 +150,7 @@ const authController ={
                 userData = {...userData, "notifData": notifData};
 
                 if(rol === "Anketör"){
-                    userData = {...notifData, ...pollsterData};
+                    userData = {...userData, ...notifData, "pollsterData": pollsterData};
                 }
                 return res.json(userData);
             }
