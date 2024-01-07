@@ -125,7 +125,7 @@ const authController ={
 
                 // Anketör ve İş bilgilerini birleştir
                 const query = `
-                    SELECT anketör.*, iş.baslik, iş.baslangic_tarihi, iş.bitis_tarihi, 
+                    SELECT anketör.*, iş.is_basligi, iş.baslangic_tarihi, iş.bitis_tarihi, 
                     iş.belirlenen_sablon, iş.kadin_orani FROM anketör LEFT JOIN iş ON anketör.yapilacak_is = iş.is_id WHERE anketör.kullanici_id = ?`;
                 const [result,] = await pool.query(query, [kullanici_id]);
 
