@@ -3,13 +3,6 @@ const bcrypt = require('bcrypt');
 
 const saltRounds = 10;
 
-
-const sehir ={
-    0: "Istanbul",
-    1: "Ankara"
-};    
-
-
 function getUserData(kullanici_id, roles, Isim, Soyisim, telefon, dogumtarihi, cinsiyet, address) {
     
     return {
@@ -24,7 +17,20 @@ function getUserData(kullanici_id, roles, Isim, Soyisim, telefon, dogumtarihi, c
     };
 }
 
-//function getNotifData()
+async function getUserName(kullanici_id) {
+    const [user,] = await pool.query("SELECT isim FROM kullanicilar WHERE kullanici_id = ?", [kullanici_id]);
+    return user[0].isim;
+}
+
+function getNotifData(bildirim_id, baslik, kullanici_id, durum, date, isim) {
+    return {
+        id: bildirim_id,
+        title: baslik,
+        status: durum,
+        person: isim,
+        date: date
+    };
+}
 
 
 const authController ={
@@ -84,14 +90,17 @@ const authController ={
             if (!user[0]) return res.json({ error: "Invalid email or password!" });
         
 
-            const { sifre: hash, kullanici_id, Isim, Soyisim, telefon, rol, dogumtarihi, cinsiyet, address} = user[0];
+            const { sifre: hash, kullanici_id, Isim, Soyisim, telefon, rol, dogumtarihi, cinsiyet, address, durum} = user[0];
     
+            if (durum === 0) return res.json({ error: "Henüz kullanıcı kaydınız onaylanmadı!" });
+
             // Şifreyi kontrol et
             const check = await bcrypt.compare(password, hash);
     
             if (check) {
                 let userData = {"userData":getUserData(kullanici_id, rol, Isim, Soyisim, telefon, dogumtarihi, cinsiyet, address)};
-                userData = {...userData,"notifData":{}} 
+                const isim = await getUserName(kullanici_id);
+                userData = {...userData,"notifData":getNotifData(bildirim_id, baslik, kullanici_id, durum, date, isim)} 
                 return res.json(userData);
             }
     
