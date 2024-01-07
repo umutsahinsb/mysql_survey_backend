@@ -8,5 +8,6 @@ router.post("/register", authController.register)
 router.post("/login", authController.login)
 router.post("/poll", authController.template)
 router.get("/register", authController.getRegister)
-router.get("/approve", authController.registeredUsers)
+router.get("/approve", authController.unregisteredUsers)
+router.post("/approve", authController.registeringUsers)
 module.exports = router

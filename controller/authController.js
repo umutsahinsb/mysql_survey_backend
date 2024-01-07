@@ -151,7 +151,7 @@ const authController ={
             });
         }
     },
-    registeredUsers:async(req,res) =>{
+    unregisteredUsers:async(req,res) =>{
         try{
             const [rows, fields] = await pool.query(
                 "SELECT * FROM `kullanicilar` WHERE durum = 0")
@@ -164,6 +164,27 @@ const authController ={
             res.json({
                 status: "error"
             })
+        }
+    },
+    registeringUsers: async (req, res) => {
+        try {
+            const { id, islem } = req.body;
+            if (islem === "accept") {
+                let userSql = "UPDATE kullanicilar SET durum = 1 WHERE kullanici_id = ?";
+                connection.query(userSql, [id], (err, result) => {
+                    if (err) throw err;
+                    console.log("Kullanıcının durumu güncellendi.");
+                });
+            } else {
+                let userSql = "DELETE FROM kullanicilar WHERE kullanici_id = ?";
+                connection.query(userSql, [id], (err, result) => {
+                    if (err) throw err;
+                    console.log("Kullanıcı silindi.");
+                });
+            }
+        } catch (error) {
+            console.error(error);
+            res.status(500).send('Sunucu Hatası');
         }
     }
 };
