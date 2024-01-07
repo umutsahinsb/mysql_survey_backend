@@ -22,18 +22,14 @@ async function getUserName(kullanici_id) {
     return user[0].isim;
 }
 async function getNotifs() {
-    const [user,] = await pool.query("SELECT * FROM bildirim ");
-    return user;
-}
-
-function getNotifData(bildirim_id, baslik, kullanici_id, durum, date, isim) {
-    return {
-        id: bildirim_id,
-        title: baslik,
-        status: durum,
-        person: isim,
-        date: date
-    };
+    const [bildirimler,] = await pool.query("SELECT * FROM bildirim");
+    return bildirimler.map(bildirim => ({
+        id: bildirim.bildirim_id,
+        title: bildirim.baslik,
+        status: bildirim.durum,
+        person: bildirim.isim,
+        date: bildirim.date
+    }));
 }
 
 
@@ -94,7 +90,7 @@ const authController ={
             if (!user[0]) return res.json({ error: "Invalid email or password!" });
         
 
-            const { sifre: hash, kullanici_id, Isim, Soyisim, telefon, rol, dogumtarihi, cinsiyet, address, durum} = user[0];
+            const { sifre: hash, kullanici_id, isim, soyisim, telefon, rol, dogumtarihi, cinsiyet, address, durum} = user[0];
     
             if (durum === 0) return res.json({ error: "Henüz kullanıcı kaydınız onaylanmadı!" });
 
@@ -102,7 +98,7 @@ const authController ={
             const check = await bcrypt.compare(password, hash);
     
             if (check) {
-                let userData = {"userData":getUserData(kullanici_id, rol, Isim, Soyisim, telefon, dogumtarihi, cinsiyet, address)};
+                let userData = {"userData":getUserData(kullanici_id, rol, isim, soyisim, telefon, dogumtarihi, cinsiyet, address, email)};
                 userData = {...userData,"notifData":getNotifs()} 
                 return res.json(userData);
             }
