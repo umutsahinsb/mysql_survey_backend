@@ -94,7 +94,7 @@ const authController ={
             if (!user[0]) return res.json({ error: "Invalid email or password!" });
         
 
-            const { sifre: hash, kullanici_id, isim, soyisim, telefon, rol, dogumtarihi, cinsiyet, address, durum, email} = user[0];
+            const { sifre: hash, kullanici_id, isim, soyisim, telefon, rol, dogumtarihi, cinsiyet, konum_id, durum, email} = user[0];
     
             if (durum === 0) return res.json({ error: "Henüz kullanıcı kaydınız onaylanmadı!" });
 
@@ -229,7 +229,7 @@ const authController ={
     getTaskCreate: async (req, res) => {
         try {
             // Anketörlerin isimlerini çek
-            const [anketorler,] = await pool.query("SELECT a.kullanici_id, k.isim FROM anketör a INNER JOIN kullanicilar k ON a.kullanici_id = k.kullanici_id");
+            const [anketorler,] = await pool.query("SELECT a.kullanici_id, k.isim FROM anketör a INNER JOIN kullanicilar k ON a.kullanici_id = k.kullanici_id WHERE ");
             const pollsters = anketorler.map(anketor => `Id:${anketor.kullanici_id}, ismi: ${anketor.isim}`);
     
             // Şablonların isimlerini çek
@@ -256,6 +256,7 @@ const authController ={
             const pollsterId = pollster.split(':')[1];
             const pollsterIdFixed = pollsterId.split(',')[0];
             console.log(pollsterIdFixed);
+            
             // Get the pollster's name
             const [pollsterInfo,] = await pool.query("SELECT k.isim FROM kullanicilar k WHERE k.kullanici_id = ?", [pollsterId]);
             const pollsterName = pollsterInfo[0].isim;
@@ -270,7 +271,7 @@ const authController ={
             const insertRows = await pool.query(insertQuery, insertValues);
     
             // Get the newly inserted task's ID
-            const taskIdQuery = "SELECT * FROM iş ORDER BY iş_id DESC LIMIT 1;";
+            const taskIdQuery = "SELECT * FROM iş ORDER BY is_id DESC LIMIT 1;";
 
             // Update the pollster's yapilacak_is field
             const updatePollsterQuery = "UPDATE anketör SET yapilacak_is = ? WHERE kullanici_id = ?";
