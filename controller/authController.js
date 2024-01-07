@@ -273,7 +273,7 @@ const authController ={
             // Get the newly inserted task's ID
             const taskIdQuery = "SELECT * FROM iş ORDER BY is_id DESC LIMIT 1";
             const [taskIdResult,] = await pool.query(taskIdQuery);
-            const taskId = taskIdResult[0].task_id;
+            const taskId = taskIdResult[0].is_id;
 
             // Update the pollster's yapilacak_is field
             const updatePollsterQuery = "UPDATE anketör SET yapilacak_is = ? WHERE kullanici_id = ?";
