@@ -24,6 +24,8 @@ function getUserData(kullanici_id, roles, Isim, Soyisim, telefon, dogumtarihi, c
     };
 }
 
+//function getNotifData()
+
 
 const authController ={
 
@@ -169,22 +171,34 @@ const authController ={
     registeringUsers: async (req, res) => {
         try {
             const { id, islem } = req.body;
-            if (islem === "accept") {
-                let userSql = "UPDATE kullanicilar SET durum = 1 WHERE kullanici_id = ?";
-                connection.query(userSql, [id], (err, result) => {
-                    if (err) throw err;
-                    console.log("Kullanıcının durumu güncellendi.");
-                });
+    
+            const [check,] = await pool.query("SELECT * FROM kullanicilar WHERE kullanici_id = ?", [id]);
+            if (check[0]) {
+                if (islem === "accept") {
+                    const userSql = "UPDATE kullanicilar SET durum = 1 WHERE kullanici_id = ?";
+                    const [userRows, userFields] = await pool.query(userSql, [id]);
+                    if (userRows.affectedRows) {
+                        return res.json({ message: "Kullanıcının durumu güncellendi." });
+                    } else {
+                        return res.json({ error: "Kullanıcının durumunu güncelleme başarısız oldu." });
+                    }
+                } else {
+                    const userSql = "DELETE FROM kullanicilar WHERE kullanici_id = ?";
+                    const [userRows, userFields] = await pool.query(userSql, [id]);
+                    if (userRows.affectedRows) {
+                        return res.json({ message: "Kullanıcı silindi." });
+                    } else {
+                        return res.json({ error: "Kullanıcıyı silme başarısız oldu." });
+                    }
+                }
             } else {
-                let userSql = "DELETE FROM kullanicilar WHERE kullanici_id = ?";
-                connection.query(userSql, [id], (err, result) => {
-                    if (err) throw err;
-                    console.log("Kullanıcı silindi.");
-                });
+                return res.json({ error: "Bu ID'ye sahip bir kullanıcı bulunamadı." });
             }
         } catch (error) {
-            console.error(error);
-            res.status(500).send('Sunucu Hatası');
+            console.log(error);
+            res.json({
+                error: error.message
+            });
         }
     }
 };
