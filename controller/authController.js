@@ -23,6 +23,7 @@ function getUserData(kullanici_id, roles, Isim, Soyisim, telefon, dogumtarihi, c
     };
 }
 
+
 const authController ={
 
     register: async (req, res) => {
@@ -89,7 +90,7 @@ const authController ={
     
             if (check) {
                 let userData = {"userData":getUserData(kullanici_id, rol, Isim, Soyisim, telefon, dogumtarihi, cinsiyet, address)};
-                
+                userData = {...userData,"notifData":{}} 
                 return res.json(userData);
             }
     
@@ -102,6 +103,31 @@ const authController ={
             });
         }
     },
+    template: async(req,res) =>{
+        
+        try{
+            const {amac, baslik } = req.body
+
+            const [check,] = await pool.query("SELECT * FROM sablon WHERE baslik = ?", [baslik]);
+            if (check[0]) {
+                return res.json({ error: "Bu tarz bir anket için gerekli şablon var." });
+            }
+
+            const userSql = "INSERT INTO sablon (amac, baslik) VALUES (?, ?)";
+            const [userRows, userFields] = await pool.query(userSql, [amac, baslik]);
+            if (userRows.affectedRows) {
+                return res.json({ message: "Template added successfully" });
+            } else {
+                return res.json({ error: "Failed to add template" });
+            }
+        }   
+        catch (error) {
+            console.log(error);
+            res.json({
+                error: error.message
+            });
+        }
+    }
 };
 
 module.exports = authController;
