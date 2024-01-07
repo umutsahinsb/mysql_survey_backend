@@ -191,8 +191,20 @@ const authController ={
                     const userSql = "UPDATE kullanicilar SET durum = 1 WHERE kullanici_id = ?";
                     const [userRows, userFields] = await pool.query(userSql, [id]);
                     if (userRows.affectedRows) {
-                        return res.json({ message: "Kullanıcının durumu güncellendi." });
-                    } else {
+                        const { rol } = check[0];
+                        let roleSql;
+                        if (rol === 'anketör') {
+                            roleSql = "INSERT INTO anketör (kullanici_id) VALUES (?)";
+                        } else if (rol === 'planlamacı') {
+                            roleSql = "INSERT INTO planlamaci (kullanici_id) VALUES (?)";
+                        } else if (rol === 'admin') {
+                            roleSql = "INSERT INTO yönetici (kullanici_id) VALUES (?)";
+                        }
+                        await pool.query(roleSql, [id]);
+                        return res.json({ message: "Kullanıcının durumu güncellendi ve rol tablosuna eklendi." });
+                    }
+                    
+                    else {
                         return res.json({ error: "Kullanıcının durumunu güncelleme başarısız oldu." });
                     }
                 } else {
