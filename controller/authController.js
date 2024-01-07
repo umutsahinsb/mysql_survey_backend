@@ -131,7 +131,7 @@ const authController ={
     },
     getRegister:async(req,res) =>{
        try{
-        
+
         // İllerin listesini al
         const [iller,] = await pool.query("SELECT * FROM iller");
         let cities = iller.map(il => il.il_adi).join(', ');
@@ -139,7 +139,7 @@ const authController ={
         // İlçelerin listesini al
         let district = [];
         for (let il of iller) {
-            const [ilceler,] = await pool.query("SELECT ilce FROM konum WHERE il_id = ?", [il.il_id]);
+            const [ilceler,] = await pool.query("SELECT ilçe FROM konum WHERE il_id = ?", [il.il_id]);
             district.push({[il.il_adi]: ilceler.map(ilce => ilce.ilce)});
         }
 
