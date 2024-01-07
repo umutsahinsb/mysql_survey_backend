@@ -150,6 +150,21 @@ const authController ={
                 status: "error"
             });
         }
+    },
+    registeredUsers:async(req,res) =>{
+        try{
+            const [rows, fields] = await pool.query(
+                "SELECT * FROM `kullanicilar` WHERE durum = 0")
+            res.json({
+                data: rows
+            })
+        }
+        catch (error){
+            console.log(error.message +"Error occured");
+            res.json({
+                status: "error"
+            })
+        }
     }
 };
 
