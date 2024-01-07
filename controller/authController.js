@@ -28,7 +28,7 @@ const authController ={
 
     register: async (req, res) => {
         try {
-            const { email, password, name, surname, phone, dogum, rol, city, district, gender} = req.body;
+            const { email, password, name, surname, phone, birthDate, role, city, district, gender} = req.body;
     
             // il_adı'nın karşılık gelen il_id'sini bul
             const [cityRows, cityFields] = await pool.query("SELECT il_id FROM iller WHERE il_adi = ?", [city]);
@@ -60,7 +60,7 @@ const authController ={
     
             // Kullanıcıyı veritabanına ekle
             const userSql = "INSERT INTO kullanicilar ( email, sifre, Isim, Soyisim, telefon, dogumtarihi, rol, konum_id, cinsiyet) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)";
-            const [userRows, userFields] = await pool.query(userSql, [email, hashedPassword, name, surname, phone, dogum, rol, konum_id, gender]);
+            const [userRows, userFields] = await pool.query(userSql, [email, hashedPassword, name, surname, phone, birthDate, role, konum_id, gender]);
     
             if (userRows.affectedRows) {
                 return res.json({ message: "Registration successful" });
