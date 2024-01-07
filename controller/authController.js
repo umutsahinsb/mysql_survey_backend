@@ -253,22 +253,18 @@ const authController ={
             const { city, district, endDate, numberOfSurveys, percentageOfWomen, pollster, startDate, template, title } = req.body;
     
             // Parse the pollster id from the pollster string
-            const pollsterId = pollster.split(":")[1].trim();
+            const pollsterId = pollster.slice(3,4)
     
             // Get the pollster's name
             const [pollsterInfo,] = await pool.query("SELECT k.isim FROM kullanicilar k WHERE k.kullanici_id = ?", [pollsterId]);
             const pollsterName = pollsterInfo[0].isim;
 
-            // il_adı'nın karşılık gelen il_id'sini bul
+           // il_adı'nın karşılık gelen il_id'sini bul
             const [cityRows, cityFields] = await pool.query("SELECT il_id FROM iller WHERE il_adi = ?", [city]);
-
-            let il_id;
-
-            if (cityRows && cityRows.length > 0) {
+        
             const il_id = cityRows[0].il_id;
-            }
+    
             // il ve ilçe'nin daha önce girilip girilmediğini kontrol et
-            console.log("Obtained il_id:", il_id);
             const [locationRows, locationFields] = await pool.query("SELECT konum_id FROM konum WHERE il_id = ? AND ilçe = ?", [il_id, district]);
             let konum_id;
             if (locationRows.length > 0) {
@@ -279,7 +275,9 @@ const authController ={
                 const [locationInsertRows, locationInsertFields] = await pool.query(locationSql, [il_id, district]);
                 konum_id = locationInsertRows.insertId;
             }
+            
     
+            
             // Insert the new task into the database
             const insertQuery = `
             INSERT INTO iş (anket_sayisi, baslangic_tarihi, bitis_tarihi, belirlenen_sablon, is_basligi, kadin_orani, konum_id)
