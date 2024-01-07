@@ -226,14 +226,6 @@ const authController ={
             });
         }
     },
-    getTaskCreate: async (req, res) => {
-        try {
-            
-        }
-        catch{
-
-        }
-    }
 };
 
 module.exports = authController;
