@@ -139,7 +139,7 @@ const authController ={
             let districts = {};
             for (let il of iller) {
                 const [ilceler,] = await pool.query("SELECT ilçe FROM konum WHERE il_id = ?", [il.il_id]);
-                districts[il.il_adi] = ilceler.map(ilce => ilce.ilce).filter(ilce => ilce !== null);
+                districts[il.il_adi] = ilceler.map(ilce => ilce.ilçe);
             }
     
             res.json({
