@@ -274,7 +274,7 @@ const authController ={
 
             // Update the pollster's yapilacak_is field
             const updatePollsterQuery = "UPDATE anketör SET yapilacak_is = ? WHERE kullanici_id = ?";
-            const updatePollsterValues = [taskId, pollsterId];
+            const updatePollsterValues = [taskId, pollsterIdFixed];
 
             console.log(taskId, pollsterIdFixed);
             await pool.query(updatePollsterQuery, updatePollsterValues);
