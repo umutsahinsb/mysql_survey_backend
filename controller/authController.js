@@ -261,9 +261,9 @@ const authController ={
 
             // il_adı'nın karşılık gelen il_id'sini bul
             const [cityRows, cityFields] = await pool.query("SELECT il_id FROM iller WHERE il_adi = ?", [city]);
-        
+            if (cityRows && cityRows.length > 0) {
             const il_id = cityRows[0].il_id;
-    
+            }
             // il ve ilçe'nin daha önce girilip girilmediğini kontrol et
             const [locationRows, locationFields] = await pool.query("SELECT konum_id FROM konum WHERE il_id = ? AND ilçe = ?", [il_id, district]);
             let konum_id;
