@@ -195,7 +195,7 @@ const authController ={
                         let roleSql;
                         if (rol === 'Anketör') {
                             roleSql = "INSERT INTO anketör (kullanici_id) VALUES (?)";
-                        } else if (rol === 'Planlamacı') {
+                        } else if (rol === 'Planlayıcı') {
                             roleSql = "INSERT INTO planlamaci (kullanici_id) VALUES (?)";
                         } else if (rol === 'Yönetici') {
                             roleSql = "INSERT INTO yönetici (kullanici_id) VALUES (?)";
