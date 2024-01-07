@@ -17,6 +17,19 @@ function getUserData(kullanici_id, roles, isim, soyisim, telefon, dogumtarihi, c
         email: email
     };
 }
+
+function getPollsterData(title, startDate, endDate, city, district, template, percentageOfWomen){
+    return{
+        title: title,
+        startDate: startDate,
+        endDate: endDate,
+        city: city,
+        district: district,
+        template: template,
+        percentageOfWomen: percentageOfWomen
+    }
+}
+
 async function getUserName(kullanici_id) {
     const [user,] = await pool.query("SELECT isim FROM kullanicilar WHERE kullanici_id = ?", [kullanici_id]);
     return user[0].isim;
@@ -102,22 +115,43 @@ const authController ={
             const check = await bcrypt.compare(password, hash);
     
             if (check) {
-                const [konumResult,] = await pool.query("SELECT il_id FROM konum WHERE konum_id = ?", [konum_id]);
-                const il_id = konumResult[0].il_id;
+                const cityQuery = "SELECT iller.il_adi FROM iller JOIN konum ON iller.konum_id = konum.konum_id WHERE konum.konum_id = ?";
+                const [cityResult,] = await pool.query(cityQuery, [konum_id]);
+                const city = cityResult[0].city;
 
-                // Iller tablosundan il_adi'yi al
-                const [ilResult,] = await pool.query("SELECT il_adi FROM iller WHERE il_id = ?", [il_id]);
-                const city = ilResult[0].il_adi;
+                const districtQuery = "SELECT konum.ilçe AS district FROM konum WHERE konum.konum_id = ?";
+                const [districtResult,] = await pool.query(districtQuery, [konum_id]);
+                const district = districtResult[0].district;
+
+                // Anketör ve İş bilgilerini birleştir
+                const query = `
+                    SELECT anketör.*, iş.baslik, iş.baslangic_tarihi, iş.bitis_tarihi, 
+                    iş.baslik, iş.kadin_orani FROM anketör LEFT JOIN iş ON anketör.kullanici_id = iş.kullanici_id WHERE anketör.kullanici_id = ?`;
+                const [result,] = await pool.query(query, [kullanici_id]);
+
+            if (result.length > 0) {
+                const {
+                    title,
+                    startDate,
+                    endDate,
+                    template,
+                    percentageOfWomen
+                } = result[0];
+
+                // Anketör verilerini getPollsterData fonksiyonuyla birleştir
+                const pollsterData = getPollsterData(title, startDate, endDate, city, district, template, percentageOfWomen);
+
 
                 let userData = {"userData":getUserData(kullanici_id, rol, isim, soyisim, telefon, dogumtarihi, cinsiyet, city, email)};
                 const notifData = await getNotifs();
-                userData = {...userData, "notifData": notifData};
+                userData = {...userData, "notifData": notifData, ...pollsterData};
                 return res.json(userData);
             }
-    
-            return res.json({ error: "Wrong password!" });
-    
-        } catch (error) {
+        }
+            
+        return res.json({ error: "Wrong password!" });
+        }
+         catch (error) {
             console.log(error);
             res.json({
                 error: error.message
