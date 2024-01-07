@@ -21,6 +21,10 @@ async function getUserName(kullanici_id) {
     const [user,] = await pool.query("SELECT isim FROM kullanicilar WHERE kullanici_id = ?", [kullanici_id]);
     return user[0].isim;
 }
+async function getNotifs() {
+    const [user,] = await pool.query("SELECT * FROM bildirim ");
+    return user;
+}
 
 function getNotifData(bildirim_id, baslik, kullanici_id, durum, date, isim) {
     return {
@@ -99,8 +103,7 @@ const authController ={
     
             if (check) {
                 let userData = {"userData":getUserData(kullanici_id, rol, Isim, Soyisim, telefon, dogumtarihi, cinsiyet, address)};
-                const isim = await getUserName(kullanici_id);
-                userData = {...userData,"notifData":getNotifData(bildirim_id, baslik, kullanici_id, durum, date, isim)} 
+                userData = {...userData,"notifData":getNotifs()} 
                 return res.json(userData);
             }
     
