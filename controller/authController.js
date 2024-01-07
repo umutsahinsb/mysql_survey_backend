@@ -94,7 +94,7 @@ const authController ={
             if (!user[0]) return res.json({ error: "Invalid email or password!" });
         
 
-            const { sifre: hash, kullanici_id, isim, soyisim, telefon, rol, dogumtarihi, cinsiyet, durum, email} = user[0];
+            const { sifre: hash, kullanici_id, isim, soyisim, telefon, rol, dogumtarihi, konum_id, cinsiyet, durum, email} = user[0];
     
             if (durum === 0) return res.json({ error: "Henüz kullanıcı kaydınız onaylanmadı!" });
 
@@ -102,7 +102,14 @@ const authController ={
             const check = await bcrypt.compare(password, hash);
     
             if (check) {
-                let userData = {"userData":getUserData(kullanici_id, rol, isim, soyisim, telefon, dogumtarihi, cinsiyet, email)};
+                const [konumResult,] = await pool.query("SELECT il_id FROM konum WHERE konum_id = ?", [konum_id]);
+                const il_id = konumResult[0].il_id;
+
+                // Iller tablosundan il_adi'yi al
+                const [ilResult,] = await pool.query("SELECT il_adi FROM iller WHERE il_id = ?", [il_id]);
+                const city = ilResult[0].il_adi;
+
+                let userData = {"userData":getUserData(kullanici_id, rol, isim, soyisim, telefon, dogumtarihi, cinsiyet, city, email)};
                 const notifData = await getNotifs();
                 userData = {...userData, "notifData": notifData};
                 return res.json(userData);
