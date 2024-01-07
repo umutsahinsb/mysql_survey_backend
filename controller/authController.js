@@ -8,7 +8,7 @@ function getUserData(kullanici_id, roles, isim, soyisim, telefon, dogumtarihi, c
     return {
         userId: kullanici_id,
         role: roles,
-        name: isimsim,
+        name: isim,
         surname: soyisim,
         phone: telefon,
         birth_date: dogumtarihi,
