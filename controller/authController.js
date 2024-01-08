@@ -592,7 +592,7 @@ const authController = {
           const city = locationResult[0].il_adi;
           const district = locationResult[0].ilçe;
   
-          const pollsterQuery = "SELECT kullanici_id FROM anketor WHERE yapilacak_is = ?";
+          const pollsterQuery = "SELECT kullanici_id FROM anketör WHERE yapilacak_is = ?";
           const [pollsterResult] = await pool.query(pollsterQuery, [taskId]);
   
 
