@@ -12,5 +12,5 @@ router.get("/approve", authController.unregisteredUsers)
 router.post("/approve", authController.registeringUsers)
 router.get("/getTaskCreate",authController.getTaskCreate)
 router.post("/create-task",authController.taskCreate)
-router.get("getTasks", authController.getTasks)
+router.get("/getTasks", authController.getTasks)
 module.exports = router
