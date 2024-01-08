@@ -552,76 +552,91 @@ const authController = {
     }
   },
   getTasks: async (req, res) => {
-        try {
-                          
-                const taskQuery = `
-                  SELECT
-                    iş.is_id,
-                    iş.is_basligi,
-                    iş.anket_sayisi,
-                    iş.baslangic_tarihi,
-                    iş.bitis_tarihi,
-                    iş.konum_id,
-                    iş.durum,
-                    FROM
-                    iş
-                `;
-              
-                const [taskResult] = await pool.query(taskQuery, [taskId]);
-              
-                const {
-                    taskId,
-                    taskName,
-                    numberOfSurveys,
-                    startingDate,
-                    endingDate,
-                    locationid,
-                    status,
-                } = taskResult[0];
-
-            const locationQuery = `
-            SELECT
-              iller.il_adi,
-              konum.ilçe
-            FROM
-              iş
-            JOIN
-              konum ON iş.konum_id = konum.konum_id
-            JOIN
-              iller ON konum.il_id = iller.il_id
-            WHERE
-              iş.konum_id = ?;
-          `;
-        
-          const [locationResult] = await pool.query(locationQuery, [locationid]);
-        
-          if (locationResult.length > 0) {
-            const city = locationResult[0].il_adi;
-            const district = locationResult[0].ilçe;
-            console.log("City:", city);
-            console.log("District:", district);
+    try {
+      const taskQuery = `
+        SELECT
+          iş.is_id,
+          iş.is_basligi,
+          iş.anket_sayisi,
+          iş.baslangic_tarihi,
+          iş.bitis_tarihi,
+          iş.konum_id,
+          iş.durum
+        FROM
+          iş
+      `;
+  
+      const [taskResult] = await pool.query(taskQuery, [taskId]);
+  
+      if (taskResult.length > 0) {
+        const {
+          is_id: taskId,
+          is_basligi: taskName,
+          anket_sayisi: numberOfSurveys,
+          baslangic_tarihi: startingDate,
+          bitis_tarihi: endingDate,
+          konum_id: locationId,
+          durum: status,
+        } = taskResult[0];
+  
+        const locationQuery = `
+          SELECT
+            iller.il_adi,
+            konum.ilçe
+          FROM
+            iş
+          JOIN
+            konum ON iş.konum_id = konum.konum_id
+          JOIN
+            iller ON konum.il_id = iller.il_id
+          WHERE
+            iş.konum_id = ?
+        `;
+  
+        const [locationResult] = await pool.query(locationQuery, [locationId]);
+  
+        if (locationResult.length > 0) {
+          const city = locationResult[0].il_adi;
+          const district = locationResult[0].ilçe;
+  
+          const pollsterQuery = "SELECT kullanici_id FROM anketor WHERE yapilacak_is = ?";
+          const [pollsterResult] = await pool.query(pollsterQuery, [taskId]);
+  
+          if (pollsterResult.length > 0) {
+            const pollsterUserId = pollsterResult[0].kullanici_id;
+            const pollsterName = getUserName(pollsterUserId);
+  
+            const taskData = {
+              taskId,
+              taskName,
+              numberOfSurveys,
+              startingDate,
+              endingDate,
+              city,
+              district,
+              pollsterName,
+              status,
+            };
+  
+            console.log(taskData);
+            // İşlemlerinizi devam ettirin
+          } else {
+            console.log("Belirtilen task ID'si ile eşleşen anketör bulunamadı.");
+            // Hata durumu veya mesajınıza göre işlemlerinizi devam ettirin
           }
-                const pollsterQuery = "SELECT kullanici_id  FROM anketor WHERE yapilacak_is = ?";
-                const [pollsterResult] = await pool.query(pollsterQuery, [taskId]);
-
-                const pollsterUserId = pollsterResult[0].kullanici_id;
-                const pollsterName= getUserName(pollsterUserId);
-
-                if (taskResult.length > 0) {
-                  const taskData = (taskResult[0].is_id, taskResult[0].is_basligi,taskResult[0].anket_sayisi,taskResult[0].baslangic_tarihi,
-                    taskResult[0].bitis_tarihi, city, district, pollsterName, taskResult[0].durum);
-                  console.log(taskData);
-                  // İşlemlerinizi devam ettirin
-                } else {
-                  console.log("Belirtilen task ID'si ile eşleşen veri bulunamadı.");
-                  // Hata durumu veya mesajınıza göre işlemlerinizi devam ettirin
-                }
-             } catch (error) {
-                console.error("Sorgu hatası:", error);
-                // Hata durumu veya mesajınıza göre işlemlerinizi devam ettirin
-             }
+        } else {
+          console.log("Belirtilen konum ID'si ile eşleşen veri bulunamadı.");
+          // Hata durumu veya mesajınıza göre işlemlerinizi devam ettirin
         }
-    
+      } else {
+        console.log("Belirtilen task ID'si ile eşleşen veri bulunamadı.");
+        // Hata durumu veya mesajınıza göre işlemlerinizi devam ettirin
+      }
+    } catch (error) {
+      console.error("Sorgu hatası:", error);
+      // Hata durumu veya mesajınıza göre işlemlerinizi devam ettirin
+    }
+  }
     
 };
 
