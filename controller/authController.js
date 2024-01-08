@@ -600,9 +600,11 @@ const authController = {
         
         const[pollsterId] = await pool.query(pollsterIdQuery, [taskId]);
         console.log(pollsterId);
-        const pollsterIdValue = pollsterId.length > 0 ? pollsterId[0].kullanici_id : null;
-
-        const pollsterName = getUserName(pollsterIdValue);
+        let pollsterName = null;
+          
+        if (pollsterId) {
+            pollsterName = getUserName(pollsterIdValue);
+          }
   
         const taskData = {
           taskId,
