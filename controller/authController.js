@@ -27,6 +27,26 @@ function getUserData(
   };
 }
 
+async function getPollsterUserId(taskId) {
+    const pollsterQuery = `
+      SELECT anketör.kullanici_id
+      FROM anketör
+      JOIN iş ON anketör.yapilacak_is = iş.is_id
+      WHERE iş.is_id = ?
+    `;
+  
+    const [pollsterResult] = await pool.query(pollsterQuery, [taskId]);
+  
+    if (pollsterResult.length > 0) {
+      const pollsterUserId = pollsterResult[0].kullanici_id;
+      console.log(pollsterUserId);
+      // İşlemlerinizi devam ettirin
+    } else {
+      console.log("Belirtilen task ID'si ile eşleşen anketör bulunamadı.");
+      // Hata durumu veya mesajınıza göre işlemlerinizi devam ettirin
+    }
+  }
+
 function getPollsterData(
   title,
   startDate,
@@ -574,11 +594,8 @@ const authController = {
         
         console.log(taskResult);
        
-        const pollsterQuery = "SELECT kullanici_id FROM anketör WHERE yapilacak_is = ?";
-        const [pollsterResult] = await pool.query(pollsterQuery, [taskId]);
-        console.log(pollsterResult);
-
-          const pollsterUserId = pollsterResult[0].kullanici_id;
+         const pollsterUserId = getPollsterUserId(taskId);
+         console.log(pollsterUserId);
           const pollsterName = getUserName(pollsterUserId);
 
         const locationQuery = `
