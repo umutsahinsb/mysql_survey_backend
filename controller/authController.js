@@ -603,7 +603,7 @@ const authController = {
         let pollsterName = null;
           
         if (pollsterId) {
-            pollsterName = getUserName(pollsterIdValue);
+            pollsterName = getUserName(pollsterId);
           }
   
         const taskData = {
