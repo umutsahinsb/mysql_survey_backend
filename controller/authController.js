@@ -18,7 +18,7 @@ function getUserData(kullanici_id, roles, isim, soyisim, telefon, dogumtarihi, c
     };
 }
 
-function getPollsterData(title, startDate, endDate, city, district, template, percentageOfWomen){
+function getPollsterData(title, startDate, endDate, city, district, template, percentageOfWoman){
     return{
         title: title,
         startDate: startDate,
@@ -26,9 +26,38 @@ function getPollsterData(title, startDate, endDate, city, district, template, pe
         city: city,
         district: district,
         template: template,
-        percentageOfWomen: percentageOfWomen
+        percentageOfWoman: percentageOfWoman
     }
 }
+
+async function getPlannerData() {
+    // 1. İş Sayısı
+    const [tasksResult,] = await pool.query("SELECT COUNT(*) AS tasks FROM iş");
+    const tasks = tasksResult[0].tasks;
+  
+    // 2. Anket Sayısı
+    const [surveysResult,] = await pool.query("SELECT SUM(anket_sayisi) AS surveys FROM iş");
+    const surveys = surveysResult[0].surveys;
+  
+    // 3. İşlemdeki ve Tamamlanan Görev Sayısı
+    const [inProcessDoneResult,] = await pool.query("SELECT SUM(CASE WHEN durum = 0 THEN 1 ELSE 0 END) AS inProcess, SUM(CASE WHEN durum = 1 THEN 1 ELSE 0 END) AS done FROM iş");
+    const inProcess = inProcessDoneResult[0].inProcess;
+    const done = inProcessDoneResult[0].done;
+  
+    // 4. Kadın ve Erkek Oranları
+    const [genderRatioResult,] = await pool.query("SELECT AVG(kadin_orani) AS percentageOfWoman, AVG(erkek_orani) AS percentageOfMan FROM iş");
+    const percentageOfWoman = genderRatioResult[0].percentageOfWoman;
+    const percentageOfMan = genderRatioResult[0].percentageOfMan;
+  
+    return {
+      tasks: tasks,
+      surveys: surveys,
+      inProcess: inProcess,
+      done: done,
+      percentageOfWoman: percentageOfWoman,
+      percentageOfMan: percentageOfMan
+    };
+  }
 
 async function getUserName(kullanici_id) {
     const [user,] = await pool.query("SELECT isim FROM kullanicilar WHERE kullanici_id = ?", [kullanici_id]);
@@ -139,7 +168,7 @@ const authController ={
                             startDate,
                             endDate,
                             template,
-                            percentageOfWomen
+                            percentageOfWoman
                         } = result[0];
                     console.log(result[0]);
 
@@ -154,16 +183,19 @@ const authController ={
                     return res.json(userData);
                     }
                 }
+               //Planlamacı için ana ekran
                 else if (rol === "Planlayıcı") {
-                    //Planlamacı için ana ekran
+                    
                     const cityQuery = "SELECT iller.il_adi FROM iller JOIN konum ON iller.il_id = konum.il_id WHERE konum.konum_id = ?";
                     const [cityResult,] = await pool.query(cityQuery, [konum_id]);
                     const city = cityResult[0].il_adi;
 
-
+                    
                     let userData = {"userData": getUserData(kullanici_id, rol, isim, soyisim, telefon, dogumtarihi, cinsiyet, city, email)};
                     const notifData = await getNotifs();
+                    const plannerUserData = getPollsterData(title, )
                     userData = {...userData, "notifData": notifData};
+                    userData = {...userData, "plannerUserData": plannerUserData}
                     console.log(userData);
                     return res.json(userData);
                 }
