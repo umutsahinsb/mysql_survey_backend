@@ -601,7 +601,7 @@ const authController = {
         WHERE iş.is_id = ?` 
 
         const[pollsterId] = await pool.query(pollsterIdQuery, [taskId]);
-
+        console.log(pollsterId);
         const pollsterName = getUserName(pollsterId[0].kullanici_id);
   
         const taskData = {
