@@ -601,20 +601,20 @@ const authController = {
             const pollsterName = getUserName(pollsterUserId);
             */
 
-            const taskData = {
-              taskId,
-              taskName,
-              numberOfSurveys,
-              startingDate,
-              endingDate,
-              city,
-              district,
-              pollsterName,
-              status,
-            };
+            // const taskData = {
+            //   taskId,
+            //   taskName,
+            //   numberOfSurveys,
+            //   startingDate,
+            //   endingDate,
+            //   city,
+            //   district,
+            //   pollsterName,
+            //   status,
+            // };
 
-            console.log(taskData);
-            return res.json(taskData);
+            // console.log(taskData);
+            // return res.json(taskData);
             // İşlemlerinizi devam ettirin
       } 
       }
