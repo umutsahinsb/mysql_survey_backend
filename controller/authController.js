@@ -45,9 +45,9 @@ async function getPlannerData() {
     const done = inProcessDoneResult[0].done;
   
     // 4. Kadın ve Erkek Oranları
-    const [genderRatioResult,] = await pool.query("SELECT AVG(kadin_orani) AS percentageOfWoman, AVG(erkek_orani) AS percentageOfMan FROM iş");
+    const [genderRatioResult,] = await pool.query("SELECT AVG(kadin_orani) AS percentageOfWoman");
     const percentageOfWoman = genderRatioResult[0].percentageOfWoman;
-    const percentageOfMan = genderRatioResult[0].percentageOfMan;
+    const percentageOfMan = (100 - genderRatioResult[0].percentageOfMan);
   
     return {
       tasks: tasks,
