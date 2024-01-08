@@ -595,13 +595,9 @@ const authController = {
         const district = locationResult[0].ilçe;
 
         const pollsterIdQuery = `
-        SELECT anketör.kullanici_id 
-        FROM anketör
-        WHERE anketör.yapilacak_is = ?`;
+        SELECT anketör.kullanici_id FROM anketör WHERE anketör.yapilacak_is = ?`;
         
-        console.log(pollsterIdQuery);
-        
-        const[pollsterId,] = await pool.query(pollsterIdQuery, taskId);
+        const[pollsterId] = await pool.query(pollsterIdQuery, taskId);
         console.log(pollsterId);
         const pollsterName = getUserName(pollsterId.kullanici_id);
   
