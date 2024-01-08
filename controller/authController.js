@@ -558,7 +558,7 @@ const authController = {
           is_id, is_basligi, anket_sayisi, baslangic_tarihi, bitis_tarihi, konum_id, durum
         FROM iş`;
   
-      const [taskResult] = await pool.query(taskQuery, [taskId]);
+      const [taskResult] = await pool.query(taskQuery);
       console.log(taskResult);
   
       if (taskResult.length > 0) {
