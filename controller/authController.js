@@ -553,38 +553,7 @@ const authController = {
   },
   getTasks: async (req, res) => {
         try {
-            const locationQuery = `
-            SELECT
-              iller.il_adi AS city,
-              konum.ilçe AS district
-            FROM
-              iş
-            JOIN
-              konum ON iş.konum_id = konum.konum_id
-            JOIN
-              iller ON konum.il_id = iller.il_id
-            WHERE
-              iş.konum_id = ?;
-          `;
-        
-          const [locationResult] = await pool.query(locationQuery, [konum_id]);
-        
-          if (locationResult.length > 0) {
-            const city = locationResult[0].il_adi;
-            const district = locationResult[0].ilçe;
-            console.log("City:", city);
-            console.log("District:", district);
-          }
-
-            const pollsterQuery = "SELECT kullanici_id  FROM anketor WHERE yapilacak_is = ?";
-            const [pollsterResult] = await pool.query(pollsterQuery, [is_id]);
-
-            const pollsterUserId = pollsterResult[0].kullanici_id;
-            const pollsterName= getUserName(pollsterUserId);
-
-            console.log("Anketör Kullanıcı ID:", pollsterUserId);
-
-          
+                          
                 const taskQuery = `
                   SELECT
                     iş.is_id,
@@ -592,6 +561,7 @@ const authController = {
                     iş.anket_sayisi,
                     iş.baslangic_tarihi,
                     iş.bitis_tarihi,
+                    iş.konum_id,
                     iş.durum,
                     FROM
                     iş
@@ -605,8 +575,37 @@ const authController = {
                     numberOfSurveys,
                     startingDate,
                     endingDate,
+                    locationid,
                     status,
                 } = taskResult[0];
+
+            const locationQuery = `
+            SELECT
+              iller.il_adi,
+              konum.ilçe
+            FROM
+              iş
+            JOIN
+              konum ON iş.konum_id = konum.konum_id
+            JOIN
+              iller ON konum.il_id = iller.il_id
+            WHERE
+              iş.konum_id = ?;
+          `;
+        
+          const [locationResult] = await pool.query(locationQuery, [locationid]);
+        
+          if (locationResult.length > 0) {
+            const city = locationResult[0].il_adi;
+            const district = locationResult[0].ilçe;
+            console.log("City:", city);
+            console.log("District:", district);
+          }
+                const pollsterQuery = "SELECT kullanici_id  FROM anketor WHERE yapilacak_is = ?";
+                const [pollsterResult] = await pool.query(pollsterQuery, [taskId]);
+
+                const pollsterUserId = pollsterResult[0].kullanici_id;
+                const pollsterName= getUserName(pollsterUserId);
 
                 if (taskResult.length > 0) {
                   const taskData = (taskResult[0].is_id, taskResult[0].is_basligi,taskResult[0].anket_sayisi,taskResult[0].baslangic_tarihi,
