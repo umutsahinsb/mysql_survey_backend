@@ -193,7 +193,7 @@ const authController ={
                     
                     let userData = {"userData": getUserData(kullanici_id, rol, isim, soyisim, telefon, dogumtarihi, cinsiyet, city, email)};
                     const notifData = await getNotifs();
-                    const plannerUserData = getPollsterData(title, )
+                    const plannerUserData = await getPlannerData();
                     userData = {...userData, "notifData": notifData};
                     userData = {...userData, "plannerUserData": plannerUserData}
                     console.log(userData);
