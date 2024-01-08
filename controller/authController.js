@@ -601,7 +601,7 @@ const authController = {
         
         console.log(pollsterIdQuery);
         
-        const[pollsterId] = await pool.query(pollsterIdQuery, taskId);
+        const[pollsterId,] = await pool.query(pollsterIdQuery, taskId);
         console.log(pollsterId);
         const pollsterName = getUserName(pollsterId.kullanici_id);
   
