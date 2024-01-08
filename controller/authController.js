@@ -587,11 +587,22 @@ const authController = {
           WHERE
             iş.konum_id = ?
         `;
-  
+        
+
         const [locationResult] = await pool.query(locationQuery, [locationId]);
   
         const city = locationResult[0].il_adi;
         const district = locationResult[0].ilçe;
+
+        const pollsterIdQuery = `
+        SELECT anketör.kullanici_id 
+        FROM anketör
+        JOIN iş ON anketör.yapilacak_is = iş.is_id
+        WHERE iş.is_id = ?` 
+
+        const[pollsterId] = await pool.query(pollsterIdQuery, [taskId]);
+
+        const pollsterName = getUserName(pollsterId[0].kullanici_id);
   
         const taskData = {
           taskId,
@@ -601,6 +612,7 @@ const authController = {
           endingDate,
           city,
           district,
+          pollsterName,
           status,
         };
   
