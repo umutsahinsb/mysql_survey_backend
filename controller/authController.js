@@ -158,7 +158,9 @@ const authController ={
                     //Planlamacı için ana ekran
                     const cityQuery = "SELECT iller.il_adi FROM iller JOIN konum ON iller.il_id = konum.il_id WHERE konum.konum_id = ?";
                     const [cityResult,] = await pool.query(cityQuery, [konum_id]);
+                    const city = cityResult[0].il_adi;
 
+                    
                     let userData = {"userData": getUserData(kullanici_id, rol, isim, soyisim, telefon, dogumtarihi, cinsiyet, city, email)};
                     const notifData = await getNotifs();
                     userData = {...userData, "notifData": notifData};
