@@ -154,7 +154,7 @@ const authController ={
                     return res.json(userData);
                     }
                 }
-                if (rol === "Planlamacı") {
+                if (rol === "Planlayıcı") {
                     //Planlamacı için ana ekran
                     
                     let userData = {"userData": getUserData(kullanici_id, rol, isim, soyisim, telefon, dogumtarihi, cinsiyet, city, email)};
