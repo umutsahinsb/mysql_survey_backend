@@ -154,6 +154,14 @@ const authController ={
                     return res.json(userData);
                     }
                 }
+                if (rol === "Planlamacı") {
+                    //Planlamacı için ana ekran
+                    
+                    let userData = {"userData": getUserData(kullanici_id, rol, isim, soyisim, telefon, dogumtarihi, cinsiyet, city, email)};
+                    const notifData = await getNotifs();
+                    userData = {...userData, "notifData": notifData};
+                
+                }
             }
             
             return res.json({ error: "Wrong password!" });
