@@ -220,7 +220,7 @@ const authController = {
       // Şifreyi kontrol et
       const check = await bcrypt.compare(password, hash);
 
-      if (check) {
+      if (!check) {
         return res.json({ error: "Wrong password!" });
       }
       // Anketör için ana ekran
