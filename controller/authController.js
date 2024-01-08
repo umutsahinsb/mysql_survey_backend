@@ -560,8 +560,9 @@ const authController = {
   
       const [taskResult] = await pool.query(taskQuery);
       console.log(taskResult);
-  
-      if (taskResult.length > 0) {
+      return(res.json);
+      
+        if (taskResult.length > 0) {
         const {
           is_id: taskId,
           is_basligi: taskName,
