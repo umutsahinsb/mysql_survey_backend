@@ -600,7 +600,7 @@ const authController = {
         JOIN iş ON anketör.yapilacak_is = iş.is_id
         WHERE iş.is_id = ?` 
 
-        console.log(is_id);
+        console.log(iş.is_id);
         console.log(taskId);
         const[pollsterId] = await pool.query(pollsterIdQuery, [is_id]);
         console.log(pollsterId);
