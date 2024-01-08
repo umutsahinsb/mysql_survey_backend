@@ -612,9 +612,6 @@ const authController = {
               numberOfSurveys,
               startingDate,
               endingDate,
-              city,
-              district,
-              pollsterName,
               status,
             };
   
