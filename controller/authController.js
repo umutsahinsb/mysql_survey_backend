@@ -598,7 +598,9 @@ const authController = {
         SELECT anketör.kullanici_id 
         FROM anketör
         WHERE anketör.yapilacak_is = ?`;
-
+        
+        console.log(pollsterIdQuery);
+        
         const[pollsterId] = await pool.query(pollsterIdQuery, taskId);
         console.log(pollsterId);
         const pollsterName = getUserName(pollsterId.kullanici_id);
