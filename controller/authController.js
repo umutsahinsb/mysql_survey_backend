@@ -551,6 +551,62 @@ const authController = {
       });
     }
   },
+  getTasks: async (req, res) => {
+        try {
+            const cityQuery = "SELECT iller.il_adi FROM iller JOIN konum ON iller.il_id = konum.il_id WHERE konum.konum_id = ?";
+            const [cityResult] = await pool.query(cityQuery, [konum_id]);
+            const city = cityResult[0].il_adi;
+            console.log(city);
+
+            const districtQuery = "SELECT ilçe FROM konum WHERE konum_id = ?";
+            const [districtResult] = await pool.query(districtQuery, [konum_id]);
+            const district = districtResult[0].ilçe;
+            console.log(district);
+
+            try {
+                const taskQuery = `
+                  SELECT
+                    is_tablosu.is_id AS taskId,
+                    is_tablosu.is_adi AS taskName,
+                    is_tablosu.aciklama AS explanation,
+                    is_tablosu.anket_sayisi AS numberOfSurveys,
+                    is_tablosu.baslangic_tarihi AS startingDate,
+                    is_tablosu.bitis_tarihi AS endingDate,
+                    iller.il_adi AS city,
+                    konum.ilçe AS district,
+                    is_tablosu.polster_adi AS polsterName,
+                    CASE
+                      WHEN is_tablosu.durum = 0 THEN 'İşlemde'
+                      WHEN is_tablosu.durum = 1 THEN 'Bitti'
+                      ELSE 'Bilinmeyen Durum'
+                    END AS status
+                  FROM
+                    is_tablosu
+                `;
+              
+                const [taskResult] = await pool.query(taskQuery, [taskId]);
+              
+                if (taskResult.length > 0) {
+                  const taskData = taskResult[0];
+                  console.log(taskData);
+                  // İşlemlerinizi devam ettirin
+                } else {
+                  console.log("Belirtilen task ID'si ile eşleşen veri bulunamadı.");
+                  // Hata durumu veya mesajınıza göre işlemlerinizi devam ettirin
+                }
+              } catch (error) {
+                console.error("Sorgu hatası:", error);
+                // Hata durumu veya mesajınıza göre işlemlerinizi devam ettirin
+              }
+
+            
+        }
+        catch{
+
+        }
+
+    }
 };
+
 
 module.exports = authController;
