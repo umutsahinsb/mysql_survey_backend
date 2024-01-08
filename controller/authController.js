@@ -555,16 +555,8 @@ const authController = {
     try {
       const taskQuery = `
         SELECT
-          iş.is_id,
-          iş.is_basligi,
-          iş.anket_sayisi,
-          iş.baslangic_tarihi,
-          iş.bitis_tarihi,
-          iş.konum_id,
-          iş.durum
-        FROM
-          iş
-      `;
+          is_id, is_basligi, anket_sayisi, baslangic_tarihi, bitis_tarihi, konum_id, durum
+        FROM iş`;
   
       const [taskResult] = await pool.query(taskQuery, [taskId]);
   
