@@ -559,7 +559,7 @@ const authController = {
         FROM iş`;
   
       const [taskResult] = await pool.query(taskQuery);
-      return res.json(taskResult);
+
       
         if (taskResult.length > 0) {
         const {
@@ -572,7 +572,7 @@ const authController = {
           durum: status,
         } = taskResult[0];
   
-       /* const locationQuery = `
+        const locationQuery = `
           SELECT
             iller.il_adi,
             konum.ilçe
@@ -598,17 +598,20 @@ const authController = {
 
             const pollsterUserId = pollsterResult[0].kullanici_id;
             const pollsterName = getUserName(pollsterUserId);
-  */
+  
             const taskData = {
               taskId,
               taskName,
               numberOfSurveys,
               startingDate,
               endingDate,
+              city,
+              district,
+              pollsterName,
               status,
             };
   
-            console.log(taskData);
+            return res.json(taskData);
             // İşlemlerinizi devam ettirin
         } else {
             console.log("Belirtilen task ID'si ile eşleşen anketör bulunamadı.");
