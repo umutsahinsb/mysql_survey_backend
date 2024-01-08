@@ -600,8 +600,7 @@ const authController = {
         JOIN iş ON anketör.yapilacak_is = iş.is_id
         WHERE iş.is_id = ?` 
 
-        const[pollsterId] = await pool.query(pollsterIdQuery, [taskResult.taskId]);
-        console.log(pollsterId);
+        const[pollsterId] = await pool.query(pollsterIdQuery, [taskId]);
         const pollsterName = getUserName(pollsterId[0].kullanici_id);
   
         const taskData = {
