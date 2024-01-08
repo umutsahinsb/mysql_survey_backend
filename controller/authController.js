@@ -558,7 +558,7 @@ const authController = {
           SELECT
             is_id, is_basligi, anket_sayisi, baslangic_tarihi, bitis_tarihi, konum_id, durum
           FROM iş`;
-    
+        
         const [taskResults] = await pool.query(taskQuery);
     
         const tasksData = await Promise.all(taskResults.map(async (taskResult) => {
@@ -573,23 +573,20 @@ const authController = {
           } = taskResult;
     
           // Anketör sorgusu
-          const pollsterQuery = `
+          const [pollsterResult] = await pool.query(`
             SELECT anketör.kullanici_id
             FROM anketör
             JOIN iş ON anketör.yapilacak_is = iş.is_id
-            WHERE iş.is_id = ?
-          `;
-    
-          const [pollsterResult] = await pool.query(pollsterQuery, [taskId]);
+            WHERE iş.is_id = ?`, [taskId]);
     
           const pollsterUserId = pollsterResult.length > 0 ? pollsterResult[0].kullanici_id : null;
           const pollsterName = pollsterUserId ? getUserName(pollsterUserId) : null;
     
           // Konum sorgusu
-          const locationQuery = `
+          const [locationResult] = await pool.query(`
             SELECT
-              iller.il_adi,
-              konum.ilçe
+              konum.ilçe,
+              iller.il_adi
             FROM
               iş
             JOIN
@@ -597,13 +594,10 @@ const authController = {
             JOIN
               iller ON konum.il_id = iller.il_id
             WHERE
-              iş.konum_id = ?
-          `;
+              iş.konum_id = ?`, [locationId]);
     
-          const [locationResult] = await pool.query(locationQuery, [locationId]);
-    
-          const city = locationResult.length > 0 ? locationResult[0].il_adi : null;
           const district = locationResult.length > 0 ? locationResult[0].ilçe : null;
+          const city = locationResult.length > 0 ? locationResult[0].il_adi : null;
     
           // İlgili işin verilerini toplama
           return {
@@ -612,8 +606,8 @@ const authController = {
             numberOfSurveys,
             startingDate,
             endingDate,
-            city,
             district,
+            city,
             pollsterName,
             status,
           };
@@ -626,7 +620,7 @@ const authController = {
         // Hata durumu veya mesajınıza göre işlemlerinizi devam ettirin
         return res.status(500).json({ error: "Internal Server Error" });
       }
-  }
+    }
     
 };
 
