@@ -558,9 +558,12 @@ const authController = {
         SELECT
           is_id, is_basligi, anket_sayisi, baslangic_tarihi, bitis_tarihi, konum_id, durum
         FROM iş`;
-
-      const [taskResult] = await pool.query(taskQuery);
-        if (taskResult.length > 0) {
+  
+      const [taskResults] = await pool.query(taskQuery);
+  
+      const tasksData = [];
+  
+      for (const taskResult of taskResults) {
         const {
           is_id: taskId,
           is_basligi: taskName,
@@ -569,8 +572,8 @@ const authController = {
           bitis_tarihi: endingDate,
           konum_id: locationId,
           durum: status,
-        } = taskResult[0];
-
+        } = taskResult;
+  
         const locationQuery = `
           SELECT
             iller.il_adi,
@@ -587,37 +590,28 @@ const authController = {
   
         const [locationResult] = await pool.query(locationQuery, [locationId]);
   
-          const city = locationResult[0].il_adi;
-          const district = locationResult[0].ilçe;
+        const city = locationResult[0].il_adi;
+        const district = locationResult[0].ilçe;
   
-        //   const pollsterQuery = "SELECT kullanici_id FROM anketor WHERE yapilacak_is = ?";
-        //   const [pollsterResult] = await pool.query(pollsterQuery, [taskId]);
+        const taskData = {
+          taskId,
+          taskName,
+          numberOfSurveys,
+          startingDate,
+          endingDate,
+          city,
+          district,
+          status,
+        };
   
-
-            // const pollsterUserId = pollsterResult[0].kullanici_id;
-            // const pollsterName = getUserName(pollsterUserId);
-            
-
-            const taskData = {
-              taskId,
-              taskName,
-              numberOfSurveys,
-              startingDate,
-              endingDate,
-              city,
-              district,
-              status,
-            };
-
-            console.log(taskData);
-            return res.json(taskData);
-            // İşlemlerinizi devam ettirin
-      } 
+        tasksData.push(taskData);
       }
-      catch (error) {
-        console.error("Sorgu hatası:", error);
-        // Hata durumu veya mesajınıza göre işlemlerinizi devam ettirin
-        return res.status(500).json({ error: "Internal Server Error" });
+  
+      console.log(tasksData);
+      return res.json(tasksData);
+    } catch (error) {
+      console.error(error);
+      return res.status(500).json({ error: 'Internal Server Error' });
     }
   }
     
