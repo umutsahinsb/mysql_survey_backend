@@ -593,7 +593,7 @@ const authController = {
           const district = locationResult[0].ilçe;
   
           const pollsterQuery = "SELECT kullanici_id FROM anketör WHERE yapilacak_is = ?";
-          const [pollsterResult] = await pool.query(pollsterQuery, [taskId]);
+          const [pollsterResult] = await pool.query(pollsterQuery, [is_id]);
           console.log(pollsterResult);
 
             const pollsterUserId = pollsterResult[0].kullanici_id;
