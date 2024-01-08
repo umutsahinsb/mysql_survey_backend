@@ -553,15 +553,28 @@ const authController = {
   },
   getTasks: async (req, res) => {
         try {
-            const cityQuery = "SELECT iller.il_adi FROM iller JOIN konum ON iller.il_id = konum.il_id WHERE konum.konum_id = ?";
-            const [cityResult] = await pool.query(cityQuery, [konum_id]);
-            const city = cityResult[0].il_adi;
-            console.log(city);
-
-            const districtQuery = "SELECT ilçe FROM konum WHERE konum_id = ?";
-            const [districtResult] = await pool.query(districtQuery, [konum_id]);
-            const district = districtResult[0].ilçe;
-            console.log(district);
+            const locationQuery = `
+            SELECT
+              iller.il_adi AS city,
+              konum.ilçe AS district
+            FROM
+              iş
+            JOIN
+              konum ON iş.konum_id = konum.konum_id
+            JOIN
+              iller ON konum.il_id = iller.il_id
+            WHERE
+              iş.konum_id = ?;
+          `;
+        
+          const [locationResult] = await pool.query(locationQuery, [konum_id]);
+        
+          if (locationResult.length > 0) {
+            const city = locationResult[0].il_adi;
+            const district = locationResult[0].ilçe;
+            console.log("City:", city);
+            console.log("District:", district);
+          }
 
             const pollsterQuery = "SELECT kullanici_id  FROM anketor WHERE yapilacak_is = ?";
             const [pollsterResult] = await pool.query(pollsterQuery, [is_id]);
@@ -571,7 +584,7 @@ const authController = {
 
             console.log("Anketör Kullanıcı ID:", pollsterUserId);
 
-            try {
+          
                 const taskQuery = `
                   SELECT
                     iş.is_id,
@@ -604,18 +617,13 @@ const authController = {
                   console.log("Belirtilen task ID'si ile eşleşen veri bulunamadı.");
                   // Hata durumu veya mesajınıza göre işlemlerinizi devam ettirin
                 }
-              } catch (error) {
+             } catch (error) {
                 console.error("Sorgu hatası:", error);
                 // Hata durumu veya mesajınıza göre işlemlerinizi devam ettirin
-              }
-
-            
+             }
         }
-        catch{
-
-        }
-
-    }
+    
+    
 };
 
 
