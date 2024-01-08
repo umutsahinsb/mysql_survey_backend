@@ -579,7 +579,7 @@ const authController = {
           durum: status,
         } = taskResult[0];
   
-        const locationQuery = `
+       /* const locationQuery = `
           SELECT
             iller.il_adi,
             konum.ilçe
@@ -595,17 +595,17 @@ const authController = {
   
         const [locationResult] = await pool.query(locationQuery, [locationId]);
   
-        if (locationResult.length > 0) {
+
           const city = locationResult[0].il_adi;
           const district = locationResult[0].ilçe;
   
           const pollsterQuery = "SELECT kullanici_id FROM anketor WHERE yapilacak_is = ?";
           const [pollsterResult] = await pool.query(pollsterQuery, [taskId]);
   
-          if (pollsterResult.length > 0) {
+
             const pollsterUserId = pollsterResult[0].kullanici_id;
             const pollsterName = getUserName(pollsterUserId);
-  
+  */
             const taskData = {
               taskId,
               taskName,
@@ -617,18 +617,10 @@ const authController = {
   
             console.log(taskData);
             // İşlemlerinizi devam ettirin
-          } else {
+        } else {
             console.log("Belirtilen task ID'si ile eşleşen anketör bulunamadı.");
             // Hata durumu veya mesajınıza göre işlemlerinizi devam ettirin
-          }
-        } else {
-          console.log("Belirtilen konum ID'si ile eşleşen veri bulunamadı.");
-          // Hata durumu veya mesajınıza göre işlemlerinizi devam ettirin
         }
-      } else {
-        console.log("Belirtilen task ID'si ile eşleşen veri bulunamadı.");
-        // Hata durumu veya mesajınıza göre işlemlerinizi devam ettirin
-      }
     } catch (error) {
       console.error("Sorgu hatası:", error);
       // Hata durumu veya mesajınıza göre işlemlerinizi devam ettirin
