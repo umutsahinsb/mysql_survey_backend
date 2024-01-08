@@ -559,6 +559,7 @@ const authController = {
         FROM iş`;
   
       const [taskResult] = await pool.query(taskQuery, [taskId]);
+      console.log(taskResult);
   
       if (taskResult.length > 0) {
         const {
