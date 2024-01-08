@@ -151,11 +151,10 @@ const authController ={
                     const notifData = await getNotifs();
                     userData = {...userData, "notifData": notifData};
                     userData = {...userData, "pollsterData": pollsterData};
+                    return res.json(userData);
                     }
-
-                return res.json(userData);
+                }
             }
-        }
             
             return res.json({ error: "Wrong password!" });
             }
