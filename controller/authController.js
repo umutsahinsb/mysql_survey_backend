@@ -563,31 +563,41 @@ const authController = {
             const district = districtResult[0].ilçe;
             console.log(district);
 
+            const pollsterQuery = "SELECT kullanici_id  FROM anketor WHERE yapilacak_is = ?";
+            const [pollsterResult] = await pool.query(pollsterQuery, [is_id]);
+
+            const pollsterUserId = pollsterResult[0].kullanici_id;
+            const pollsterName= getUserName(pollsterUserId);
+
+            console.log("Anketör Kullanıcı ID:", pollsterUserId);
+
             try {
                 const taskQuery = `
                   SELECT
-                    is_tablosu.is_id AS taskId,
-                    is_tablosu.is_adi AS taskName,
-                    is_tablosu.aciklama AS explanation,
-                    is_tablosu.anket_sayisi AS numberOfSurveys,
-                    is_tablosu.baslangic_tarihi AS startingDate,
-                    is_tablosu.bitis_tarihi AS endingDate,
-                    iller.il_adi AS city,
-                    konum.ilçe AS district,
-                    is_tablosu.polster_adi AS polsterName,
-                    CASE
-                      WHEN is_tablosu.durum = 0 THEN 'İşlemde'
-                      WHEN is_tablosu.durum = 1 THEN 'Bitti'
-                      ELSE 'Bilinmeyen Durum'
-                    END AS status
-                  FROM
-                    is_tablosu
+                    iş.is_id,
+                    iş.is_basligi,
+                    iş.anket_sayisi,
+                    iş.baslangic_tarihi,
+                    iş.bitis_tarihi,
+                    iş.durum,
+                    FROM
+                    iş
                 `;
               
                 const [taskResult] = await pool.query(taskQuery, [taskId]);
               
+                const {
+                    taskId,
+                    taskName,
+                    numberOfSurveys,
+                    startingDate,
+                    endingDate,
+                    status,
+                } = taskResult[0];
+
                 if (taskResult.length > 0) {
-                  const taskData = taskResult[0];
+                  const taskData = (taskResult[0].is_id, taskResult[0].is_basligi,taskResult[0].anket_sayisi,taskResult[0].baslangic_tarihi,
+                    taskResult[0].bitis_tarihi, city, district, pollsterName, taskResult[0].durum);
                   console.log(taskData);
                   // İşlemlerinizi devam ettirin
                 } else {
