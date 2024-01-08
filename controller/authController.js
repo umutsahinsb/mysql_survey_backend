@@ -571,7 +571,16 @@ const authController = {
           konum_id: locationId,
           durum: status,
         } = taskResult[0];
-  
+        
+        console.log(taskResult);
+       
+        const pollsterQuery = "SELECT kullanici_id FROM anketör WHERE yapilacak_is = ?";
+        const [pollsterResult] = await pool.query(pollsterQuery, [taskId]);
+        console.log(pollsterResult);
+
+          const pollsterUserId = pollsterResult[0].kullanici_id;
+          const pollsterName = getUserName(pollsterUserId);
+
         const locationQuery = `
           SELECT
             iller.il_adi,
@@ -593,12 +602,6 @@ const authController = {
           const district = locationResult[0].ilçe;
           console.log(city); console.log(district);
 
-          const pollsterQuery = "SELECT kullanici_id FROM anketör WHERE yapilacak_is = ?";
-          const [pollsterResult] = await pool.query(pollsterQuery, [taskResult[0].taskId]);
-          console.log(pollsterResult);
-
-            const pollsterUserId = pollsterResult[0].kullanici_id;
-            const pollsterName = getUserName(pollsterUserId);
   
             const taskData = {
               taskId,
