@@ -560,8 +560,6 @@ const authController = {
         FROM iş`;
 
       const [taskResult] = await pool.query(taskQuery);
-      return res.json(taskResult);
-
         if (taskResult.length > 0) {
         const {
           is_id: taskId,
@@ -573,7 +571,6 @@ const authController = {
           durum: status,
         } = taskResult[0];
 
-       /* const locationQuery = `
         const locationQuery = `
           SELECT
             iller.il_adi,
@@ -597,24 +594,23 @@ const authController = {
           const [pollsterResult] = await pool.query(pollsterQuery, [taskId]);
   
 
-            const pollsterUserId = pollsterResult[0].kullanici_id;
-            const pollsterName = getUserName(pollsterUserId);
-            */
+            // const pollsterUserId = pollsterResult[0].kullanici_id;
+            // const pollsterName = getUserName(pollsterUserId);
+            
 
-            // const taskData = {
-            //   taskId,
-            //   taskName,
-            //   numberOfSurveys,
-            //   startingDate,
-            //   endingDate,
-            //   city,
-            //   district,
-            //   pollsterName,
-            //   status,
-            // };
+            const taskData = {
+              taskId,
+              taskName,
+              numberOfSurveys,
+              startingDate,
+              endingDate,
+              city,
+              district,
+              status,
+            };
 
-            // console.log(taskData);
-            // return res.json(taskData);
+            console.log(taskData);
+            return res.json(taskData);
             // İşlemlerinizi devam ettirin
       } 
       }
