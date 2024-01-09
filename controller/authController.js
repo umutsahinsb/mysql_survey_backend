@@ -282,7 +282,7 @@ const authController = {
 
           const questionQuery = "SELECT soru_id, soru FROM sorular WHERE sablon_id = ?";
 
-          const [questionResults] = await pool.query(questionQuery, [soru_id, soru]);
+          const [questionResults] = await pool.query(questionQuery, [questionSablonId]);
           console.log(questionResults);
 
 
