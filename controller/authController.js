@@ -247,16 +247,17 @@ const authController = {
             result[0];
           console.log(result[0]);
           // Anketör verilerini getPollsterData fonksiyonuyla birleştir
-          const pollsterData = getPollsterData(
-            result[0].is_id,
-            result[0].is_basligi,
-            result[0].baslangic_tarihi,
-            result[0].bitis_tarihi,
-            city,
-            district,
-            result[0].belirlenen_sablon,
-            result[0].kadin_orani
-          );
+          const pollsterData = {
+            taskId: result[0].is_id,
+            title: result[0].is_basligi,
+            startDate: result[0].baslangic_tarihi,
+            endDate: result[0].bitis_tarihi,
+            city: city,
+            district: district,
+            template: result[0].belirlenen_sablon,
+            percentageOfWoman: result[0].kadin_orani
+          }
+          
           console.log("Pollster Data:", pollsterData);
           let userData = {
             userData: getUserData(
