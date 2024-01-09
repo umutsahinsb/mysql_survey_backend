@@ -28,25 +28,18 @@ function getUserData(
 }
 
 
-function getPollsterData(
-  taskId,
-  title,
-  startDate,
-  endDate,
-  city,
-  district,
-  template,
-  percentageOfWoman
-) {
+function getPollsterData(result, city, district)
+
+{
   return {
-    taskId: taskId,
-    title: title,
-    startDate: startDate,
-    endDate: endDate,
+    taskId: result.taskId,
+    title: result.title,
+    startDate: result.startDate,
+    endDate: result.endDate,
     city: city,
     district: district,
-    template: template,
-    percentageOfWoman: percentageOfWoman,
+    template: result.template,
+    percentageOfWoman: result.percentageOfWoman,
   };
 }
 
@@ -247,16 +240,7 @@ const authController = {
             result[0];
           console.log(result[0]);
           // Anketör verilerini getPollsterData fonksiyonuyla birleştir
-          const pollsterData = getPollsterData(
-            result[0].is_id, 
-            result[0].is_basligi, 
-            result[0].baslangic_tarihi, 
-            result[0].bitis_tarihi, 
-            city,
-            district,
-            result[0].belirlenen_sablon, 
-            result[0].kadin_orani
-          );
+          const pollsterData = getPollsterData(result[0], city, district);
           console.log("Pollster Data:", pollsterData);
           let userData = {
             userData: getUserData(
