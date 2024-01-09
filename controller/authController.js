@@ -594,16 +594,21 @@ const authController = {
         const city = locationResult[0].il_adi;
         const district = locationResult[0].ilçe;
 
-        const pollsterIdQuery = `SELECT anketör.kullanici_id FROM anketör WHERE anketör.yapilacak_is = ?`;
+        pollsterNameQuery = `SELECT kullanicilar.isim
+            FROM iş
+            JOIN anketör ON iş.is_id = anketör.yapilacak_is
+            JOIN kullanicilar ON anketör.kullanici_id = kullanicilar.kullanici_id
+            WHERE iş.is_id = ?`;
         
-        console.log('pollsterIdQuery:', pollsterIdQuery, 'taskId:', taskId);
+        console.log('pollsterIdQuery:', pollsterNameQuery, 'taskId:', taskId);
         
-        const[pollsterId] = await pool.query(pollsterIdQuery, [taskId]);
-        console.log(pollsterId);
+        const[pollsterTemp] = await pool.query(pollsterNameQuery, [taskId]);
+        console.log(pollsterTemp);
+        
         let pollsterName = null;
           
         if (pollsterId) {
-            pollsterName = getUserName(pollsterId);
+            pollsterName = pollsterTemp;
           }
   
         const taskData = {
