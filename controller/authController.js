@@ -340,7 +340,7 @@ const authController = {
   },
   template: async (req, res) => {
     try {
-      const { amac, baslik } = req.body;
+      const { purpose, title, questions } = req.body;
 
       const [check] = await pool.query(
         "SELECT * FROM sablon WHERE baslik = ?",
@@ -352,13 +352,18 @@ const authController = {
         });
       }
 
-      const userSql = "INSERT INTO sablon (amac, baslik) VALUES (?, ?)";
-      const [userRows, userFields] = await pool.query(userSql, [amac, baslik]);
-      if (userRows.affectedRows) {
-        return res.json({ message: "Template added successfully" });
-      } else {
-        return res.json({ error: "Failed to add template" });
-      }
+      const userSql = "INSERT INTO sablon (purpose, title) VALUES (?, ?)";
+      const [userRows, userFields] = await pool.query(userSql, [purpose, title]);
+      if (!userRows.affectedRows) {
+        return res.json({ error: "Şablon oluşturulamadı!" });
+      } 
+      
+      const [templateId] = "SELECT sablon_id FROM sablon ORDER BY sablon_id DESC LIMIT 1";
+      console.log(templateId);
+      console.log(questions);
+      
+
+
     } catch (error) {
       console.log(error);
       res.json({
