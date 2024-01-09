@@ -251,7 +251,7 @@ const authController = {
 
             taskId: result[0][0].is_id,
             title: result[0][0].is_basligi,
-            startDate: result[0].baslangic_tarihi,
+            startDate: result[0][0].baslangic_tarihi,
             endDate: result[0][0].bitis_tarihi,
             city: city,
             district: district,
