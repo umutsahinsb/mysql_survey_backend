@@ -344,7 +344,7 @@ const authController = {
 
       const [check] = await pool.query(
         "SELECT * FROM sablon WHERE baslik = ?",
-        [baslik]
+        [title]
       );
       if (check[0]) {
         return res.json({
