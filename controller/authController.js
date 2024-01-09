@@ -535,7 +535,7 @@ const authController = {
         `;
 
         const [result] = await pool.query(query, [city, district]);
-        
+        console.log(result);
         const locationId = result[0].konum_id;
         
 
