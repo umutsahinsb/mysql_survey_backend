@@ -240,7 +240,7 @@ const authController = {
         console.log(district);
 
         // Anketör ve İş bilgilerini birleştir
-        const query = `CALL GetAnketorAndIsInfo(?)`;
+        const query = `CALL GetAnketorAndIs(?)`;
         const [result] = await pool.query(query, [kullanici_id]);
 
         if (result.length > 0) {
