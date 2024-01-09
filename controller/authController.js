@@ -607,7 +607,7 @@ const authController = {
         
         let pollsterName = null;
           
-        if (pollsterId) {
+        if (pollsterTemp) {
             pollsterName = pollsterTemp;
           }
   
