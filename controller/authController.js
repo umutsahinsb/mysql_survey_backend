@@ -245,7 +245,7 @@ const authController = {
         if (result.length > 0) {
           const { is_id, is_basligi, baslangic_tarihi, bitis_tarihi, belirlenen_sablon, kadin_orani } =
             result[0];
-          console.log(result[0]);
+          console.log(result[0][0]);
           // Anketör verilerini getPollsterData fonksiyonuyla birleştir
           const pollsterData = {
             taskId: result[0].is_id,
