@@ -242,7 +242,7 @@ const authController = {
         // Anketör ve İş bilgilerini birleştir
         const query = `CALL GetAnketorAndIs(?)`;
         const [result] = await pool.query(query, [kullanici_id]);
-
+        console.log(result);
         
           const { taskId, title, startDate, endDate, template, percentageOfWoman } =
             result[0];
