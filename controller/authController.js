@@ -243,7 +243,7 @@ const authController = {
         const query = `CALL GetAnketorAndIs(?)`;
         const [result] = await pool.query(query, [kullanici_id]);
 
-        if (result.length > 0) {
+        
           const { taskId, title, startDate, endDate, template, percentageOfWoman } =
             result[0];
           console.log(result[0]);
@@ -288,7 +288,7 @@ const authController = {
 
           userData = {...userData, questions: questionResults};
           return res.json(userData);
-        }
+        
       }
       //Planlamacı için ana ekran
       else if (rol === "Planlayıcı") {
