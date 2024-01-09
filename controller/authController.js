@@ -276,6 +276,16 @@ const authController = {
           const notifData = await getNotifs();
           userData = { ...userData, notifData: notifData };
           userData = { ...userData, pollsterData: pollsterData };
+
+          
+          const questionSablonId = result[0].belirlenen_sablon;
+
+          const questionQuery = "SELECT soru_id, soru FROM sorular WHERE sablon_id = ?";
+
+          const [questionResults] = await pool.query(questionQuery, [soru_id, soru]);
+          console.log(questionResults);
+
+
           return res.json(userData);
         }
       }
