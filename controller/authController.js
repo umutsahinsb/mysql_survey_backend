@@ -29,6 +29,7 @@ function getUserData(
 
 
 function getPollsterData(
+  taskId,
   title,
   startDate,
   endDate,
@@ -38,6 +39,7 @@ function getPollsterData(
   percentageOfWoman
 ) {
   return {
+    taskId: taskId,
     title: title,
     startDate: startDate,
     endDate: endDate,
