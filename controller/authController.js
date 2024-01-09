@@ -485,8 +485,8 @@ const authController = {
       );
 
       // Şablonların isimlerini çek
-      const [sablonlar] = await pool.query("SELECT baslik FROM sablon");
-      const templates = sablonlar.map((sablon) => sablon.baslik);
+      const [sablonlar] = await pool.query("SELECT sablon_id, baslik FROM sablon");
+      const templates = sablonlar.map((sablon) => ({ sablon_id: sablon.sablon_id, baslik: sablon.baslik }));
 
       // Sonuçları döndür
       return res.json({
