@@ -250,14 +250,14 @@ const authController = {
 
           // Anketör verilerini getPollsterData fonksiyonuyla birleştir
           const pollsterData = getPollsterData(
-            result[0].is_id,
-            result[0].is_basligi,
-            result[0].baslangic_tarihi,
-            result[0].bitis_tarihi,
+            result.is_id,
+            result.is_basligi,
+            result.baslangic_tarihi,
+            result.bitis_tarihi,
             city,
             district,
-            result[0].belirlenen_sablon,
-            result[0].kadin_orani
+            result.belirlenen_sablon,
+            result.kadin_orani
           );
           console.log("Pollster Data:", pollsterData);
 
