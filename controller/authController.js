@@ -352,7 +352,7 @@ const authController = {
         });
       }
 
-      const userSql = "INSERT INTO sablon (purpose, title) VALUES (?, ?)";
+      const userSql = "INSERT INTO sablon (amac, baslik) VALUES (?, ?)";
       const [userRows, userFields] = await pool.query(userSql, [purpose, title]);
       if (!userRows.affectedRows) {
         return res.json({ error: "Şablon oluşturulamadı!" });
