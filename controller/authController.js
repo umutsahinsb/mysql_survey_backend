@@ -511,6 +511,7 @@ const authController = {
         pollster,
         startDate,
         template,
+        template_title,
         title,
       } = req.body;
 
@@ -526,10 +527,22 @@ const authController = {
       );
       const pollsterName = pollsterInfo[0].isim;
 
+      const query = `
+            SELECT k.konum_id
+            FROM konum k
+            JOIN iller i ON k.il_id = i.il_id
+            WHERE i.il_adi = ? AND k.ilce = ?
+        `;
+
+        const [result] = await pool.query(query, [city, district]);
+        
+        const locationId = result[0].konum_id;
+        
+
       // Insert the new task into the database
       const insertQuery = `
             INSERT INTO iş (anket_sayisi, baslangic_tarihi, bitis_tarihi, belirlenen_sablon, is_basligi, kadin_orani, konum_id)
-            VALUES (?, ?, ?, ?, ?, ?, 6)`;
+            VALUES (?, ?, ?, ?, ?, ?, ?)`;
 
       const insertValues = [
         numberOfSurveys,
@@ -538,7 +551,7 @@ const authController = {
         template,
         title,
         percentageOfWomen,
-        city,
+        locationId,
       ];
 
       const insertRows = await pool.query(insertQuery, insertValues);
