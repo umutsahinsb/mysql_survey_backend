@@ -285,7 +285,7 @@ const authController = {
           const [questionResults] = await pool.query(questionQuery, [questionSablonId]);
           console.log(questionResults);
 
-
+          userData = {...userData, questions: questionResults};
           return res.json(userData);
         }
       }
