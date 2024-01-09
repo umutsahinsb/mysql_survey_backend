@@ -361,13 +361,15 @@ const authController = {
       const templateIdQuery = "SELECT sablon_id FROM sablon ORDER BY sablon_id DESC LIMIT 1";
       const [templateIdResult] = await pool.query(templateIdQuery);
       
-      console.log(templateIdResult);
-      
       const templateId = templateIdResult[0].sablon_id;
 
       console.log(templateId);
       console.log(questions);
-      
+
+        const questionsSql = "INSERT INTO sorular (sablon_id, soru) VALUES ?";
+        const questionsValues = questions.map((questions) => [templateId, questions]);
+        await pool.query(questionsSql, [questionsValues]);
+
 
 
     } catch (error) {
