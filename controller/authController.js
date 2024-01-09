@@ -280,7 +280,7 @@ const authController = {
           
           const questionSablonId = result[0].belirlenen_sablon;
 
-          const questionQuery = "SELECT soru_id, soru FROM sorular WHERE sablon_id = ?";
+          const questionQuery = "SELECT soru_id AS id, soru AS title FROM sorular WHERE sablon_id = ?";
 
           const [questionResults] = await pool.query(questionQuery, [questionSablonId]);
           console.log(questionResults);
