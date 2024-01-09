@@ -608,7 +608,7 @@ const authController = {
         let pollsterName = null;
           
         if (pollsterTemp) {
-            pollsterName = pollsterTemp;
+            pollsterName = pollsterTemp.isim;
           }
   
         const taskData = {
