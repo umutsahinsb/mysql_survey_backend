@@ -244,6 +244,7 @@ const authController = {
         const [result] = await pool.query(query, [kullanici_id]);
         console.log(result);
         
+        if(result.length>0){
           const { taskId, title, startDate, endDate, template, percentageOfWoman } =
             result[0];
           console.log(result[0]);
@@ -273,6 +274,7 @@ const authController = {
               city,
               email
             ),
+          
           };
           const notifData = await getNotifs();
           userData = { ...userData, notifData: notifData };
@@ -288,7 +290,7 @@ const authController = {
 
           userData = {...userData, questions: questionResults};
           return res.json(userData);
-        
+        }
       }
       //Planlamacı için ana ekran
       else if (rol === "Planlayıcı") {
