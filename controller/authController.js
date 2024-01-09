@@ -358,9 +358,10 @@ const authController = {
         return res.json({ error: "Şablon oluşturulamadı!" });
       } 
       
-      const [templateIdQuery] = "SELECT sablon_id FROM sablon ORDER BY sablon_id DESC LIMIT 1";
+      const [templateIdQuery] = "SELECT * FROM sablon ORDER BY sablon_id DESC LIMIT 1";
       const [templateIdResult] = await pool.query(templateIdQuery);
       const templateId = templateIdResult[0].sablon_id;
+
       console.log(templateId);
       console.log(questions);
       
