@@ -244,11 +244,10 @@ const authController = {
         const [result] = await pool.query(query, [kullanici_id]);
         console.log(result);
         
-        if(result.length>0){
+        if (result.length > 0) {
           const { taskId, title, startDate, endDate, template, percentageOfWoman } =
             result[0];
           console.log(result[0]);
-
           // Anketör verilerini getPollsterData fonksiyonuyla birleştir
           const pollsterData = getPollsterData(
             result[0].is_id,
@@ -261,7 +260,6 @@ const authController = {
             result[0].kadin_orani
           );
           console.log("Pollster Data:", pollsterData);
-
           let userData = {
             userData: getUserData(
               kullanici_id,
@@ -274,20 +272,15 @@ const authController = {
               city,
               email
             ),
-          
           };
           const notifData = await getNotifs();
           userData = { ...userData, notifData: notifData };
           userData = { ...userData, pollsterData: pollsterData };
-
           
           const questionSablonId = result[0].belirlenen_sablon;
-
           const questionQuery = "SELECT soru_id AS id, soru AS title FROM sorular WHERE sablon_id = ?";
-
           const [questionResults] = await pool.query(questionQuery, [questionSablonId]);
           console.log(questionResults);
-
           userData = {...userData, questions: questionResults};
           return res.json(userData);
         }
