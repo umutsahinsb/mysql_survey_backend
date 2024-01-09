@@ -531,7 +531,7 @@ const authController = {
             SELECT k.konum_id
             FROM konum k
             JOIN iller i ON k.il_id = i.il_id
-            WHERE i.il_adi = ? AND k.ilce = ?
+            WHERE i.il_adi = ? AND k.ilçe = ?
         `;
 
         const [result] = await pool.query(query, [city, district]);
