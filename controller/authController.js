@@ -366,10 +366,11 @@ const authController = {
       console.log(templateId);
       console.log(questions);
 
-        const questionsSql = "INSERT INTO sorular (sablon_id, soru) VALUES ?";
-        const questionsValues = questions.map((questions) => [templateId, questions]);
-        await pool.query(questionsSql, [questionsValues]);
+      const questionsSql = "INSERT INTO sorular (sablon_id, soru) VALUES ?";
+      const questionsValues = questions.map((questions) => [templateId, questions]);
+      await pool.query(questionsSql, [questionsValues]);
 
+      return res.json({ message: "Şablon başarıyla oluşturuldu!" });
 
 
     } catch (error) {
