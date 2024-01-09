@@ -693,7 +693,7 @@ const authController = {
     try {
       const  {
         participant,
-        taskTitle,
+        taskId,
         questions
       } = req.body
 
@@ -708,10 +708,24 @@ const authController = {
       console.log(participantId);
 
 
-
-
       const pollQuery = "INSERT INTO anket (is_id, katilimci_id, yapilma_tarihi) VALUES (?, ?, ?)"
-      const [pollQueryRows, pollQueryFields] = await pool.query(pollQuery, [participant.name, participant.surname, participant.gender]);
+      const [pollQueryRows, pollQueryFields] = await pool.query(pollQuery, [taskId, participantId, new Date()]);
+      
+      if (!pollQueryRows.affectedRows){
+        return res.json({error:"Anket oluşturulamadı."})
+      }
+
+      const answersQuery = "INSERT INTO cevaplar (cevap, soru_id) VALUES (?, ?)";
+    
+      for (const question of questions) {
+          const [answersRows, answersFields] = await pool.query(answersQuery, [question.answer, question.id]);
+          
+          if (!answersRows.affectedRows) {
+              return res.json({ error: "Cevap eklenemedi!" });
+          }
+      }
+      return res.json({message:"Anket başarıyla eklendi."})
+
     }
     catch(err){
       return res.status(500).json({ error: 'Internal Server Error' });
