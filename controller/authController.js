@@ -238,6 +238,7 @@ const authController = {
         const district = districtResult[0].ilçe;
         console.log(district);
         // Anketör ve İş bilgilerini birleştir
+        
         const query = `CALL GetAnketorAndIs(?)`;
         const [result] = await pool.query(query, [kullanici_id]);
         
@@ -247,14 +248,14 @@ const authController = {
           console.log(result[0]);
           // Anketör verilerini getPollsterData fonksiyonuyla birleştir
           const pollsterData = getPollsterData(
-            result[0].is_id,
-            result[0].is_basligi,
-            result[0].baslangic_tarihi,
-            result[0].bitis_tarihi,
+            taskId,
+            title,
+            startDate,
+            endDate,
             city,
             district,
-            result[0].belirlenen_sablon,
-            result[0].kadin_orani
+            template,
+            percentageOfWoman
           );
           console.log("Pollster Data:", pollsterData);
           let userData = {
