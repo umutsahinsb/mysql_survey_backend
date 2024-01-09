@@ -239,17 +239,18 @@ const authController = {
 
         // Anketör ve İş bilgilerini birleştir
         const query = `
-                        SELECT anketör.*, iş.is_basligi, iş.baslangic_tarihi, iş.bitis_tarihi, 
+                        SELECT anketör.*, iş.is_id, iş.is_basligi, iş.baslangic_tarihi, iş.bitis_tarihi, 
                         iş.belirlenen_sablon, iş.kadin_orani FROM anketör LEFT JOIN iş ON anketör.yapilacak_is = iş.is_id WHERE anketör.kullanici_id = ?`;
         const [result] = await pool.query(query, [kullanici_id]);
 
         if (result.length > 0) {
-          const { title, startDate, endDate, template, percentageOfWoman } =
+          const { taskId, title, startDate, endDate, template, percentageOfWoman } =
             result[0];
           console.log(result[0]);
 
           // Anketör verilerini getPollsterData fonksiyonuyla birleştir
           const pollsterData = getPollsterData(
+            result[0].is_id,
             result[0].is_basligi,
             result[0].baslangic_tarihi,
             result[0].bitis_tarihi,
@@ -684,8 +685,37 @@ const authController = {
       console.error(error);
       return res.status(500).json({ error: 'Internal Server Error' });
     }
-  }
+  },
+  setPoll: async (req, res) => {
     
+    try {
+      const  {
+        participant,
+        taskTitle,
+        questions
+      } = req.body
+
+      const participantQuery = "INSERT INTO katilimcilar(isim, soyisim, cinsiyet) VALUES (?, ?, ?)"
+      const [participantRows, participantFields] = await pool.query(participantQuery, [participant.name, participant.surname, participant.gender]);
+
+      if (!participantRows.affectedRows){
+        return res.json({error:"Katılımcı oluşturulamadı."})
+      }
+
+      const participantId = participantRows.insertId;
+      console.log(participantId);
+
+
+
+
+      const pollQuery = "INSERT INTO anket (is_id, katilimci_id, yapilma_tarihi) VALUES (?, ?, ?)"
+      const [pollQueryRows, pollQueryFields] = await pool.query(pollQuery, [participant.name, participant.surname, participant.gender]);
+    }
+    catch(err){
+      return res.status(500).json({ error: 'Internal Server Error' });
+    }
+  }
+
 };
 
 
