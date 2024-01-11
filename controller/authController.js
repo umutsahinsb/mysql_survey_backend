@@ -736,42 +736,6 @@ const authController = {
       return res.status(500).json({ error: 'Internal Server Error' });
     }
   },
-  getCopy: async(req, res) =>{
-    try{
-        const{sira} = req.params
-        const [rows, fields] = await pool.query(
-            "SELECT * FROM `kullanicilar`")
-        
-        let workbook = new ExcelJS.Workbook();
-        let worksheet = workbook.addWorksheet("Veriler");
-
-        worksheet.columns = [
-            { header: 'Sıra', key: 'sira', width: 10 },
-        ];
-
-        rows.forEach((row) => {
-            let rowData = {
-                sira: row.kullanici_id,
-            };
-            worksheet.addRow(rowData);
-        });
-
-        await workbook.xlsx.writeFile('C:/Users/umutg/Desktop/Veriler.xlsx');
-
-        res.json({
-            status: "success",
-            message: "Data exported to Excel file successfully"
-        })
-    }
-    catch(error){
-        console.error(error.message);
-        res.status(500).json({
-            status: "error",
-            message: "An error occurred while processing your request"
-        })
-    }
-}
-
 
 };
 
