@@ -751,7 +751,7 @@ const authController = {
 
         rows.forEach((row) => {
             let rowData = {
-                sira: row.Sıra,
+                sira: row.kullanici_id,
             };
             worksheet.addRow(rowData);
         });
