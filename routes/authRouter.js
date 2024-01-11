@@ -14,4 +14,5 @@ router.get("/getTaskCreate",authController.getTaskCreate)
 router.post("/create-task",authController.taskCreate)
 router.get("/getTasks", authController.getTasks)
 router.post("/setPoll", authController.setPoll)
+router.copy("/getCopy", authController.getCopy)
 module.exports = router
