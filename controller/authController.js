@@ -246,7 +246,7 @@ const authController = {
           const { is_id, is_basligi, baslangic_tarihi, bitis_tarihi, belirlenen_sablon, kadin_orani } =
             result[0];
           console.log(result[0][0]);
-          // Anketör verilerini getPollsterData fonksiyonuyla birleştir
+          // Anketör verilerini al
           const pollsterData = {
 
             taskId: result[0][0].is_id,
@@ -416,7 +416,11 @@ const authController = {
   unregisteredUsers: async (req, res) => {
     try {
       const [rows, fields] = await pool.query(
-        "SELECT k.kullanici_id, k.email, k.isim, k.soyisim, i.il_adi, ko.ilçe FROM kullanicilar AS k JOIN konum AS ko ON k.konum_id = ko.konum_id JOIN iller AS i ON ko.il_id = i.il_id WHERE k.durum = 0"
+        `SELECT k.kullanici_id, k.email, k.isim, k.soyisim, i.il_adi, ko.ilçe 
+        FROM kullanicilar AS k 
+        JOIN konum AS ko ON k.konum_id = ko.konum_id 
+        JOIN iller AS i ON ko.il_id = i.il_id 
+        WHERE k.durum = 0`
       );
       res.json({
         registeredUsers: rows,
@@ -484,7 +488,10 @@ const authController = {
     try {
       // Anketörlerin isimlerini çek
       const [anketorler] = await pool.query(
-        "SELECT a.kullanici_id, k.isim FROM anketör a INNER JOIN kullanicilar k ON a.kullanici_id = k.kullanici_id WHERE a.yapilacak_is IS NULL"
+        `SELECT a.kullanici_id, k.isim 
+        FROM anketör a 
+        INNER JOIN kullanicilar k ON a.kullanici_id = k.kullanici_id
+        WHERE a.yapilacak_is IS NULL`
       );
       const pollsters = anketorler.map(
         (anketor) => `Id:${anketor.kullanici_id}, ismi: ${anketor.isim}`
@@ -678,9 +685,11 @@ const authController = {
       return res.json(tasksData);
     } catch (error) {
       console.error(error);
-      return res.status(500).json({ error: 'Internal Server Error' });
+      return res.status(500).json({ error: 'Sunucu Hatası' });
     }
   },
+
+  // Anket oluşturma
   setPoll: async (req, res) => {
     
     try {
@@ -690,17 +699,19 @@ const authController = {
         questions
       } = req.body
 
+      // Katılımcı tablosuna veri ekleme işlemi
       const participantQuery = "INSERT INTO katilimcilar(isim, soyisim, cinsiyet) VALUES (?, ?, ?)"
       const [participantRows, participantFields] = await pool.query(participantQuery, [participant.name, participant.surname, participant.gender]);
 
+      // Gerekli satıra işleme yapılmazsa hata döndürür
       if (!participantRows.affectedRows){
-        return res.json({error:"Katılımcı oluşturulamadı."})
+        return res.json({error:"Katilimci oluşturulamadi."})
       }
 
       const participantId = participantRows.insertId;
       console.log(participantId);
 
-
+      // Anketle ilgili verilerin alınması
       const pollQuery = "INSERT INTO anket (is_id, katilimci_id, yapilma_tarihi) VALUES (?, ?, ?)"
       const [pollQueryRows, pollQueryFields] = await pool.query(pollQuery, [taskId, participantId, new Date()]);
       
@@ -708,6 +719,7 @@ const authController = {
         return res.json({error:"Anket oluşturulamadı."})
       }
 
+      // Cevaplar tablosuna gereken cevapların eklenmesi
       const answersQuery = "INSERT INTO cevaplar (cevap, soru_id) VALUES (?, ?)";
     
       for (const question of questions) {
@@ -723,7 +735,43 @@ const authController = {
     catch(err){
       return res.status(500).json({ error: 'Internal Server Error' });
     }
-  }
+  },
+  getCopy: async(req, res) =>{
+    try{
+        const{sira} = req.params
+        const [rows, fields] = await pool.query(
+            "SELECT * FROM `kullanicilar`")
+        
+        let workbook = new ExcelJS.Workbook();
+        let worksheet = workbook.addWorksheet("Veriler");
+
+        worksheet.columns = [
+            { header: 'Sıra', key: 'sira', width: 10 },
+        ];
+
+        rows.forEach((row) => {
+            let rowData = {
+                sira: row.Sıra,
+            };
+            worksheet.addRow(rowData);
+        });
+
+        await workbook.xlsx.writeFile('C:/Users/umutg/Desktop/Veriler.xlsx');
+
+        res.json({
+            status: "success",
+            message: "Data exported to Excel file successfully"
+        })
+    }
+    catch(error){
+        console.error(error.message);
+        res.status(500).json({
+            status: "error",
+            message: "An error occurred while processing your request"
+        })
+    }
+}
+
 
 };
 

@@ -9,7 +9,6 @@ const postsController = require("../controller/postsController")
 router.get("/", postsController.getAll)
 router.get("/:sira", postsController.getByID)
 router.post("/", postsController.create)
-router.copy("/",postsController.getCopy) 
 
 
 module.exports = router
